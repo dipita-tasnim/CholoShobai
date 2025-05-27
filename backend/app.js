@@ -10,17 +10,8 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// ... existing code ...
-const messageRoutes = require('./routes/message.routes');
-// ... existing code ...
-
-// Add this line with other route declarations
-app.use('/api/messages', messageRoutes);
-// ... existing code ...
-
-
 app.get("/", (req, res) => {
-    res.send("Hellp  sidrat world");
+    res.send("Hello World");
 });
 
 app.use('/users', userRoutes);

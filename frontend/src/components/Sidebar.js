@@ -55,15 +55,14 @@ const Sidebar = () => {
     <aside className="sidebar">
       <div className="sidebar-container">
         <Link to="/">
-          <h1 className="sidebar-title">RoveTogether</h1>
+          <h1 className="sidebar-title">cholo shobai</h1>
         </Link>
 
         <nav className="sidebar-nav">
           <Link to="/home" className="sidebar-link">Home</Link>
-          <Link to="/myrides" className="sidebar-link">My Rides</Link>
-          <Link to="/search-users" className="sidebar-link">Find & Rate Users</Link>
           <Link to="/profile" className="sidebar-link">Profile</Link>
-          <Link to="/messages" className="sidebar-link">Messages</Link>
+          <Link to="/myrides" className="sidebar-link">My Rides</Link>         
+          <Link to="/search-users" className="sidebar-link">Rating</Link>
           {isAdmin && (
             <Link to="/admin" className="sidebar-link admin-link">Admin Dashboard</Link>
           )}

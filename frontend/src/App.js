@@ -1,7 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
-import { MessageProvider } from './contexts/MessageContext';
-import MessageSystem from './components/MessageSystem';
 
 // Pages & Components
 import Home from './pages/Home';
@@ -17,7 +15,6 @@ import UserSearch from './components/UserSearch';
 import AdminDashboard from './pages/AdminDashboard';
 import Logout from './components/Logout';
 import RideConfirmation from './pages/RideConfirmation';
-import Messages from './pages/Messages';
 import './index.css';
 
 function AppLayout() {
@@ -52,7 +49,6 @@ function AppLayout() {
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/logout" element={<Logout />} />
             <Route path="/ride-confirmation" element={<RideConfirmation />} />
-            <Route path="/messages" element={<Messages />} />
             <Route path="*" element={<div>404 Page Not Found</div>} />
           </Routes>
         </div>
@@ -64,11 +60,9 @@ function AppLayout() {
 function App() {
   return (
     <AuthProvider>
-      <MessageProvider>
-        <BrowserRouter>
-          <AppLayout />
-        </BrowserRouter>
-      </MessageProvider>
+      <BrowserRouter>
+        <AppLayout />
+      </BrowserRouter>
     </AuthProvider>
   );
 }
