@@ -5,31 +5,63 @@ const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
+    const [token, setToken] = useState(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (token) {
+        const storedToken = localStorage.getItem('token');
+        if (storedToken) {
             try {
-                const decoded = jwtDecode(token);
-                setUser({
-                    id: decoded.id,
-                    email: decoded.email,
-                    role: decoded.role,
-                    name: decoded.name
-                });
+                const decoded = jwtDecode(storedToken);
+                const currentTime = Date.now() / 1000;
+                if (decoded.exp < currentTime) {
+                    console.log('Token expired');
+                    localStorage.removeItem('token');
+                    setUser(null);
+                    setToken(null);
+                } else {
+                    setUser({
+                        _id: decoded._id,
+                        email: decoded.email,
+                        role: decoded.role,
+                        name: decoded.name
+                    });
+                    setToken(storedToken);
+                }
             } catch (error) {
                 console.error('Error decoding token:', error);
                 localStorage.removeItem('token');
+                setUser(null);
+                setToken(null);
             }
         }
         setLoading(false);
     }, []);
 
+    const login = (newToken) => {
+        localStorage.setItem('token', newToken);
+        const decoded = jwtDecode(newToken);
+        setUser({
+            _id: decoded._id,
+            email: decoded.email,
+            role: decoded.role,
+            name: decoded.name
+        });
+        setToken(newToken);
+    };
+
+    const logout = () => {
+        localStorage.removeItem('token');
+        setUser(null);
+        setToken(null);
+    };
+
     const value = {
         user,
-        setUser,
-        loading
+        token,
+        loading,
+        login,
+        logout
     };
 
     return (

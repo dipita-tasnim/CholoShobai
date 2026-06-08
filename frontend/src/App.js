@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
+import { ChatProvider } from './contexts/ChatContext';
 
 // Pages & Components
 import Home from './pages/Home';
@@ -60,9 +61,11 @@ function AppLayout() {
 function App() {
   return (
     <AuthProvider>
-      <BrowserRouter>
-        <AppLayout />
-      </BrowserRouter>
+      <ChatProvider>
+        <BrowserRouter>
+          <AppLayout />
+        </BrowserRouter>
+      </ChatProvider>
     </AuthProvider>
   );
 }

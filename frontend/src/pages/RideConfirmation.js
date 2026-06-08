@@ -1,19 +1,28 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
+import { useChat } from '../contexts/ChatContext';
+import ChatWindow from '../components/chat/ChatWindow';
+import '../components/chat/Chat.css';
 
 const RideConfirmation = () => {
   const location = useLocation();
   const rideId = new URLSearchParams(location.search).get("rideId");
+  const { setActiveRideId } = useChat();
 
   const [joinedUsers, setJoinedUsers] = useState([]);
   const [error, setError] = useState(null);
   const [currentUserId, setCurrentUserId] = useState(null);
   const [ridePostedBy, setRidePostedBy] = useState(null);
+  const [rideDetails, setRideDetails] = useState(null);
+  const [loadingRide, setLoadingRide] = useState(true);
+  const [errorRide, setErrorRide] = useState(null);
+  const [currentUserRideStatus, setCurrentUserRideStatus] = useState(null);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
       setError("Not logged in");
+      setLoadingRide(false);
       return;
     }
 
@@ -22,34 +31,84 @@ const RideConfirmation = () => {
       setCurrentUserId(decoded._id);
     } catch (err) {
       setError("Failed to decode token");
+      setLoadingRide(false);
       return;
     }
 
-    const fetchRideDetails = async () => {
+    const loadRideDetails = async () => {
       if (!rideId) {
-        setError("Missing ride ID");
+        setErrorRide('No ride ID provided.');
+        setLoadingRide(false);
         return;
       }
 
       try {
+        setLoadingRide(true);
+        setErrorRide(null);
         const res = await fetch(`/api/rides/${rideId}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
         if (!res.ok) {
-          throw new Error("Failed to fetch ride");
+          if (res.status === 404) {
+            setErrorRide('Ride not found.');
+          } else {
+            throw new Error("Failed to fetch ride");
+          }
+          setRideDetails(null);
+          setJoinedUsers([]);
+          setCurrentUserRideStatus(null);
+          return;
         }
 
-        const rideData = await res.json();
-        setRidePostedBy(rideData.user_id?._id || rideData.user_id);
-        setJoinedUsers(rideData.joinedUserIds || []);
+        const data = await res.json();
+        setRideDetails(data);
+        const ownerId = data.user_id?._id || data.user_id;
+        setRidePostedBy(ownerId);
+        const joined = data.joinedUserIds || [];
+        setJoinedUsers(joined);
+
+        if (currentUserId) {
+          if (String(currentUserId) === String(ownerId)) {
+            setCurrentUserRideStatus('owner');
+          } else {
+            const currentUserEntry = joined.find(item => String(item.user?._id || item.user) === String(currentUserId));
+            setCurrentUserRideStatus(currentUserEntry ? currentUserEntry.status : 'not_joined');
+          }
+        }
+
       } catch (err) {
-        setError("Failed to load ride details");
+        console.error('Error fetching ride details:', err);
+        setErrorRide("Failed to load ride details.");
+      } finally {
+        setLoadingRide(false);
       }
     };
 
-    fetchRideDetails();
-  }, [rideId]);
+    if (rideId && currentUserId) {
+      loadRideDetails();
+      setActiveRideId(rideId);
+    } else if (!rideId) {
+      setErrorRide('No ride ID provided.');
+      setLoadingRide(false);
+    }
+
+    return () => {
+      setActiveRideId(null);
+    };
+  }, [rideId, currentUserId, setActiveRideId]);
+
+  useEffect(() => {
+    if (currentUserId && rideDetails) {
+      const ownerId = rideDetails.user_id?._id || rideDetails.user_id;
+      if (String(currentUserId) === String(ownerId)) {
+        setCurrentUserRideStatus('owner');
+      } else {
+        const currentUserEntry = joinedUsers.find(item => String(item.user?._id || item.user) === String(currentUserId));
+        setCurrentUserRideStatus(currentUserEntry ? currentUserEntry.status : 'not_joined');
+      }
+    }
+  }, [joinedUsers, currentUserId, rideDetails]);
 
   const handleAction = async (userId, status) => {
     const token = localStorage.getItem("token");
@@ -78,6 +137,20 @@ const RideConfirmation = () => {
 
   const isOwner = String(currentUserId) === String(ridePostedBy);
 
+  if (loadingRide) {
+    return <div>Loading ride details...</div>;
+  }
+
+  if (errorRide) {
+    return <div style={{ color: 'red' }}>Error: {errorRide}</div>;
+  }
+
+  if (!rideDetails) {
+    return <div>Ride not found.</div>;
+  }
+
+  const isChatAllowed = currentUserRideStatus === 'owner' || currentUserRideStatus === 'confirmed';
+
   return (
     <div className="user-profile">
       <h2>Ride Confirmation</h2>
@@ -89,17 +162,17 @@ const RideConfirmation = () => {
           {joinedUsers.map((item) => {
             const user = item.user;
             const userId = user._id;
-            const isRideOwner = String(userId) === String(ridePostedBy);
+            const isItemOwner = String(userId) === String(ridePostedBy);
 
             return (
               <div className="user-card2" key={userId}>
-                {isRideOwner && <span className="owner-tag">Ride Owner</span>}
+                {isItemOwner && <span className="owner-tag">Ride Owner</span>}
                 <p><strong>Full Name:</strong> {user.fullname?.firstname} {user.fullname?.lastname}</p>
                 <p><strong>Email:</strong> {user.email}</p>
-                {!isRideOwner && (
+                {!isItemOwner && (
                   <p><strong>Status:</strong> {item.status}</p>
                 )}
-                {isOwner && !isRideOwner && (
+                {isOwner && !isItemOwner && (
                   <div className="confirmation-buttons">
                     <button
                       className={`confirm-btn ${item.status === 'confirmed' ? 'active' : ''}`}
@@ -120,8 +193,19 @@ const RideConfirmation = () => {
           })}
         </div>
       ) : (
-        !error && <p>No users have joined this ride.</p>
+        !error && <p>No users have joined this ride yet.</p>
       )}
+
+      <div className="ride-chat-section">
+        <h3>Chat</h3>
+        {isChatAllowed ? (
+          <ChatWindow />
+        ) : (
+          <div className="chat-restricted-message">
+            Chat is only available for the ride owner and confirmed participants.
+          </div>
+        )}
+      </div>
     </div>
   );
 };

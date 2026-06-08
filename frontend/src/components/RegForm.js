@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { useNavigate, Navigate } from "react-router-dom";  // <-- added Navigate
+import { useAuth } from "../contexts/AuthContext";
 
 
 const RegForm = () => {
     const navigate = useNavigate();
+    const { login } = useAuth();
 
     const [firstname, setFirstname] = useState("");
     const [lastname, setLastname] = useState("");
@@ -38,7 +40,7 @@ const RegForm = () => {
                 return;
             }
     
-            localStorage.setItem('token', json.token);
+            login(json.token);
             setFirstname('');
             setLastname('');
             setEmail('');

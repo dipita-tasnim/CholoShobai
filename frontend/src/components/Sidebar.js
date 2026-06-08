@@ -55,7 +55,7 @@ const Sidebar = () => {
     <aside className="sidebar">
       <div className="sidebar-container">
         <Link to="/">
-          <h1 className="sidebar-title">cholo shobai</h1>
+          <h1 className="sidebar-title">Cholo Shobai</h1>
         </Link>
 
         <nav className="sidebar-nav">

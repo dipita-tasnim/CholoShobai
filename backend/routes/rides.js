@@ -6,6 +6,7 @@ const {
   deleteRide,
   updateRide,
   getMyRides,
+  getMyChatRides,
   updateRideStatus, //  Import this from controller
   joinRide,
   updateJoinedUserStatus
@@ -22,6 +23,7 @@ router.use(authUser); //  Middleware for all routes
 //  Routes
 router.get('/', getRides);
 router.get('/myrides', getMyRides);
+router.get('/mychats', getMyChatRides);
 router.get('/:id', getRide);
 router.post('/', createRide);
 router.delete('/:id', deleteRide);

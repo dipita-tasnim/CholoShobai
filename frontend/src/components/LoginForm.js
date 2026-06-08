@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { useNavigate, Navigate } from "react-router-dom";
 import { useEffect } from 'react';
+import { useAuth } from "../contexts/AuthContext";
 
 const LoginForm = () => {
     const navigate = useNavigate();
+    const { login } = useAuth();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState(null);
@@ -38,8 +40,8 @@ const LoginForm = () => {
                 throw new Error(json.message || "Login failed");
             }
 
-            // Store token and user info
-            localStorage.setItem('token', json.token);
+            // Update auth context (this also persists the token to localStorage)
+            login(json.token);
             localStorage.setItem('user', JSON.stringify(json.user));
 
             // Clear form

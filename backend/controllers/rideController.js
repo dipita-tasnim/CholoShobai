@@ -99,6 +99,26 @@ const getMyRides = async (req, res) => {
   }
 };
 
+// Get rides the user can chat in (owner OR a confirmed participant)
+const getMyChatRides = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const rides = await Ride.find({
+      $or: [
+        { user_id: userId },
+        { joinedUserIds: { $elemMatch: { user: userId, status: 'confirmed' } } }
+      ]
+    })
+      .populate('user_id', 'fullname.firstname fullname.lastname email')
+      .populate('joinedUserIds.user', 'fullname.firstname fullname.lastname email')
+      .sort({ createdAt: -1 });
+
+    res.status(200).json(rides);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch your chat rides' });
+  }
+};
+
 // Create a new ride
 const createRide = async (req, res) => {
   const { startingPoint, destination, date, time, availableSlots, preference } = req.body;
@@ -283,6 +303,7 @@ module.exports = {
   deleteRide,
   updateRide,
   getMyRides,
+  getMyChatRides,
   updateRideStatus,
   joinRide,
   updateJoinedUserStatus

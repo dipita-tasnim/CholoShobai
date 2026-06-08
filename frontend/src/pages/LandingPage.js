@@ -12,13 +12,13 @@ const LandingPage = () => {
         <button onClick={() => navigate('/registration')}>Sign Up</button>
       </div>
 
-      <h1>Welcome to RoveTogether</h1>
+      <h1>Welcome to Cholo Shobai 👋</h1>
       <p>Your companion for smarter, safer, and more affordable travel.</p>
      
       
     {/*  New Feature Section */}
     <div className="features-section">
-        <h2>What RoveTogether can do?</h2>
+        <h2>What Cholo Shobai can do?</h2>
         <ul className="features-list">
           <li>🚗 Post a ride and find a travel partner</li>
           <li>📅 Book a seat & join planned rides</li>
