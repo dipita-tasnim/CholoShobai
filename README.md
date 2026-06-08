@@ -2,7 +2,7 @@
 
 > **CholoShobai** platform connects people with similar travel plans. They can share costs which saves their money with a safe travel. We don’t provide vehicles, we help people to find each other.
 
-📺 **[Quick view — demo video](https://drive.google.com/file/d/1YFaN9XgD9kFF7gJL888Jy6fq-E7n2jeY/view?usp=drive_link)**
+**[Quick view — demo video](https://drive.google.com/file/d/1YFaN9XgD9kFF7gJL888Jy6fq-E7n2jeY/view?usp=drive_link)**
 
 ---
 
@@ -201,4 +201,3 @@ The frontend runs on **http://localhost:3000** and proxies API requests to the b
 
 ---
 
-<p align="center">Made with ❤️ for travelers who'd rather not ride alone.</p>
