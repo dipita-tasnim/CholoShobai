@@ -4,7 +4,7 @@ const userService = require("../services/user.service");
 const { validationResult } = require("express-validator");
 const blackListTokenModel = require("../models/blacklistToken.model");
 const Otp = require("../models/otp.model");
-const { sendOtpEmail, hasSmtp } = require("../services/mail.service");
+const { sendOtpEmail, hasMailProvider } = require("../services/mail.service");
 const bcrypt = require("bcrypt");
 const mongoose = require('mongoose');
 
@@ -43,11 +43,11 @@ module.exports.sendOtp = async (req, res) => {
                 : "Verification code generated."
         };
 
-        // Development convenience: when no SMTP is configured (and not in
-        // production), return the code directly so signup can be tested.
-        if (!hasSmtp() && process.env.NODE_ENV !== 'production') {
+        // Development convenience: when no email provider is configured (and not
+        // in production), return the code directly so signup can be tested.
+        if (!hasMailProvider() && process.env.NODE_ENV !== 'production') {
             response.devOtp = otp;
-            response.message = "SMTP is not configured, so the code is shown here for development only.";
+            response.message = "No email provider configured, so the code is shown here for development only.";
         }
 
         return res.status(200).json(response);
