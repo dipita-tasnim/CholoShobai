@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { API_BASE } from "../config";
 
 const MyRides = () => {
   const [rides, setRides] = useState([]);
@@ -10,7 +11,7 @@ const MyRides = () => {
       const token = localStorage.getItem("token");
 
       try {
-        const response = await fetch("/api/rides/myrides", {
+        const response = await fetch(`${API_BASE}/api/rides/myrides`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -35,7 +36,7 @@ const MyRides = () => {
     try {
       const token = localStorage.getItem("token");
 
-      const response = await fetch(`/api/rides/${rideId}/status`, {
+      const response = await fetch(`${API_BASE}/api/rides/${rideId}/status`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

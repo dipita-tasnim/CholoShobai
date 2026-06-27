@@ -12,17 +12,17 @@ const LandingPage = () => {
         <button onClick={() => navigate('/registration')}>Sign Up</button>
       </div>
 
-      <h1>Welcome to Cholo Shobai 👋</h1>
+      <h1>Welcome to CholoShobai </h1>
       <p>Your companion for smarter, safer, and more affordable travel.</p>
      
       
     {/*  New Feature Section */}
     <div className="features-section">
-        <h2>What Cholo Shobai can do?</h2>
+        <h2>What CholoShobai can do?</h2>
         <ul className="features-list">
-          <li>🚗 Post a ride and find a travel partner</li>
-          <li>📅 Book a seat & join planned rides</li>
-          <li>📍 Match preferences based on gender, timing & more</li>
+          <li> Post a ride and find a travel partner</li>
+          <li> Book a seat & join planned rides</li>
+          <li> Match preferences based on gender, timing & more</li>
         </ul>
       </div>
     </div>

@@ -3,6 +3,7 @@ import { useLocation, useParams } from "react-router-dom";
 import { useChat } from '../contexts/ChatContext';
 import ChatWindow from '../components/chat/ChatWindow';
 import '../components/chat/Chat.css';
+import { API_BASE } from "../config";
 
 const RideConfirmation = () => {
   const location = useLocation();
@@ -45,7 +46,7 @@ const RideConfirmation = () => {
       try {
         setLoadingRide(true);
         setErrorRide(null);
-        const res = await fetch(`/api/rides/${rideId}`, {
+        const res = await fetch(`${API_BASE}/api/rides/${rideId}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -115,7 +116,7 @@ const RideConfirmation = () => {
     if (!token) return;
 
     try {
-      const res = await fetch(`/api/rides/${rideId}/user/${userId}/status`, {
+      const res = await fetch(`${API_BASE}/api/rides/${rideId}/user/${userId}/status`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

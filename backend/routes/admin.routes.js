@@ -8,22 +8,27 @@ const { isAdmin } = require('../middlewares/admin.middleware');
 router.use(authUser);
 router.use(isAdmin);
 
-// Get all users
+// Dashboard overview stats
+router.get('/stats', adminController.getStats);
+
+// Users
 router.get('/users', adminController.getAllUsers);
-
-// Get all ratings
-router.get('/ratings', adminController.getAllRatings);
-
-// Delete a user
+router.get('/users/:userId/detail', adminController.getUserDetail);
 router.delete('/users/:userId', adminController.deleteUser);
+router.put('/users/:userId/make-admin', adminController.makeAdmin);
+router.put('/users/:userId/remove-admin', adminController.removeAdmin);
+router.put('/users/:userId/status', adminController.updateUserStatus);
 
-// Delete a rating
+// Rides
+router.get('/rides', adminController.getAllRides);
+router.put('/rides/:rideId/status', adminController.updateRideStatus);
+router.delete('/rides/:rideId', adminController.deleteRide);
+
+// Ratings
+router.get('/ratings', adminController.getAllRatings);
 router.delete('/ratings/:ratingId', adminController.deleteRating);
 
-// Make a user an admin
-router.put('/users/:userId/make-admin', adminController.makeAdmin);
-
-// Remove admin privileges
-router.put('/users/:userId/remove-admin', adminController.removeAdmin);
+// Audit log
+router.get('/audit', adminController.getAuditLogs);
 
 module.exports = router;

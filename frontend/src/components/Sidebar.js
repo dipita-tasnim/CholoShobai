@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import { API_BASE } from "../config";
 
 const Sidebar = () => {
 
@@ -27,7 +28,7 @@ const Sidebar = () => {
       const token = localStorage.getItem('token'); // Get token from local storage
       if (token) {
         try {
-          const response = await fetch('/users/profile', {
+          const response = await fetch(`${API_BASE}/users/profile`, {
             headers: {
               'Authorization': `Bearer ${token}`
             }
@@ -55,7 +56,7 @@ const Sidebar = () => {
     <aside className="sidebar">
       <div className="sidebar-container">
         <Link to="/">
-          <h1 className="sidebar-title">Cholo Shobai</h1>
+          <h1 className="sidebar-title">CholoShobai</h1>
         </Link>
 
         <nav className="sidebar-nav">

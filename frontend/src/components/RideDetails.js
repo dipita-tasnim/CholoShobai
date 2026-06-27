@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { API_BASE } from "../config";
 
 const RideDetails = ({ ride }) => {
   const isOpen = ride.status === "open";
@@ -31,7 +32,7 @@ const RideDetails = ({ ride }) => {
     if (!token) return;
     
     try {
-      const response = await fetch(`/api/rides/${ride._id}/join`, {
+      const response = await fetch(`${API_BASE}/api/rides/${ride._id}/join`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,

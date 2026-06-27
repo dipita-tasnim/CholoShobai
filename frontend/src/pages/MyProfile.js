@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { API_BASE } from "../config";
 
 const MyProfile = () => {
   const [user, setUser] = useState(null); // Only one user
@@ -8,7 +9,7 @@ const MyProfile = () => {
     const fetchProfile = async () => {
       const token = localStorage.getItem('token'); // get token from local storage
       try {
-        const response = await fetch('/users/profile', {
+        const response = await fetch(`${API_BASE}/users/profile`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }

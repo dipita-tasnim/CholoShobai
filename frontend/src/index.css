@@ -46,10 +46,15 @@ body {
 
 
 
+/* Remove the default blue underline on the link wrapping the title */
+.sidebar-container > a {
+  text-decoration: none;
+}
+
 .sidebar-title {
   font-size: 1.5rem;
   font-weight: bold;
- 
+
   margin-top: 0.5rem; /* Adjust this to move the title closer to the top */
   margin-bottom: 1.5rem; /* Increased space between title and the line */
   color: white;
@@ -169,8 +174,8 @@ body {
   gap: 1rem;
 }
 
-/* NOTE: old chat message styles removed — current chat lives in
-   components/chat/Chat.css (uses .chat-message / .bubble / .msg-body). */
+  NOTE: old chat message styles removed. Current chat now lives in
+  components/chat/Chat.css (uses .chat-message, .bubble, .msg-body).
 
 .message-input {
   padding: 0.75rem;

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
+import { API_BASE } from "../config";
 
 
 
@@ -43,7 +44,7 @@ const RideForm = () => {
         };
 
         const token = localStorage.getItem("token");
-        const response = await fetch('/api/rides', {
+        const response = await fetch(`${API_BASE}/api/rides`, {
             method: 'POST',
             body: JSON.stringify(ride),
             headers: {

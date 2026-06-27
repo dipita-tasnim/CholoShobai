@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { API_BASE } from "../config";
 
 const UserSearch = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -21,7 +22,7 @@ const UserSearch = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`/users/search?query=${encodeURIComponent(searchQuery)}`, {
+      const response = await fetch(`${API_BASE}/users/search?query=${encodeURIComponent(searchQuery)}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }

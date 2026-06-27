@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import RatingForm from '../components/RatingForm';
+import { API_BASE } from "../config";
 
 const UserProfile = () => {
   const { userId } = useParams();
@@ -17,7 +18,7 @@ const UserProfile = () => {
         const token = localStorage.getItem('token');
 
         // Fetch user details
-        const userResponse = await fetch(`/users/${userId}`, {
+        const userResponse = await fetch(`${API_BASE}/users/${userId}`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -31,7 +32,7 @@ const UserProfile = () => {
         setUser(userData);
 
         // Fetch user ratings
-        const ratingsResponse = await fetch(`/api/ratings/user/${userId}`, {
+        const ratingsResponse = await fetch(`${API_BASE}/api/ratings/user/${userId}`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -60,7 +61,7 @@ const UserProfile = () => {
   const handleRatingSubmit = async (newRating) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('/api/ratings', {
+      const response = await fetch(`${API_BASE}/api/ratings`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -78,7 +79,7 @@ const UserProfile = () => {
       }
 
       // Refetch ratings after successful submission
-      const ratingsResponse = await fetch(`/api/ratings/user/${userId}`, {
+      const ratingsResponse = await fetch(`${API_BASE}/api/ratings/user/${userId}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }

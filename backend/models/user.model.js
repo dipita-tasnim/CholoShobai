@@ -31,6 +31,11 @@ const userSchema = new mongoose.Schema({
         enum: ['user', 'admin'],
         default: 'user'
     },
+    status: {
+        type: String,
+        enum: ['active', 'suspended', 'banned'],
+        default: 'active'
+    },
     socketId: {
         type: String,
     },
@@ -39,8 +44,8 @@ const userSchema = new mongoose.Schema({
         ref: 'User',
         default: null
     }
-      
-})
+
+}, { timestamps: true })
 //password generation and encryption process
 userSchema.methods.generateAuthToken = function () {
     const token = jwt.sign(

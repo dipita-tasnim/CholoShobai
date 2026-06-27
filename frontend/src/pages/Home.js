@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 
 // components
 import RideDetails from "../components/RideDetails";
+import { API_BASE } from "../config";
 
 export default function Home() {
   const [rides, setRides] = useState(null);
@@ -40,7 +41,7 @@ export default function Home() {
       };
 
       const queryString = new URLSearchParams(formattedParams).toString();
-      const response = await fetch(`/api/rides?${queryString}`, {
+      const response = await fetch(`${API_BASE}/api/rides?${queryString}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -79,7 +80,7 @@ export default function Home() {
       <div className="home-card">
         <div className="home-header">
           <div>
-            <h2 className="home-title">Create Your Ride and Find a Travel Buddy!</h2>
+            <h2 className="home-title">Share Your Route, Share the Cost</h2>
             <p className="home-subtext">
               Need to head somewhere? Create a post and find friends to share the journey with. It's fast, easy, and safe!
             </p>

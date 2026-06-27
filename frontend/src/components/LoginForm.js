@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate, Navigate } from "react-router-dom";
 import { useEffect } from 'react';
 import { useAuth } from "../contexts/AuthContext";
+import { API_BASE } from "../config";
 
 const LoginForm = () => {
     const navigate = useNavigate();
@@ -26,7 +27,7 @@ const LoginForm = () => {
         try {
             const user = { email, password };
 
-            const response = await fetch('/users/login', {
+            const response = await fetch(`${API_BASE}/users/login`, {
                 method: 'POST',
                 body: JSON.stringify(user),
                 headers: {

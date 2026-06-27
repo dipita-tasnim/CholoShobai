@@ -3,7 +3,59 @@ const userModel = require("../models/user.model");
 const userService = require("../services/user.service");
 const { validationResult } = require("express-validator");
 const blackListTokenModel = require("../models/blacklistToken.model");
+const Otp = require("../models/otp.model");
+const { sendOtpEmail, hasSmtp } = require("../services/mail.service");
+const bcrypt = require("bcrypt");
 const mongoose = require('mongoose');
+
+// Send a verification code to an email before registration.
+module.exports.sendOtp = async (req, res) => {
+    try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+
+        const email = (req.body.email || '').toLowerCase().trim();
+
+        // Do not send a code to an email that is already registered.
+        const existing = await userModel.findOne({ email });
+        if (existing) {
+            return res.status(400).json({ message: "Email already registered. Please log in instead." });
+        }
+
+        // Generate a 6 digit code and store only its hash.
+        const otp = String(Math.floor(100000 + Math.random() * 900000));
+        const otpHash = await bcrypt.hash(otp, 10);
+
+        // Replace any previous code for this email.
+        await Otp.findOneAndUpdate(
+            { email },
+            { email, otpHash, attempts: 0, createdAt: new Date() },
+            { upsert: true, new: true, setDefaultsOnInsert: true }
+        );
+
+        const { delivered } = await sendOtpEmail(email, otp);
+
+        const response = {
+            message: delivered
+                ? "A verification code has been sent to your email."
+                : "Verification code generated."
+        };
+
+        // Development convenience: when no SMTP is configured (and not in
+        // production), return the code directly so signup can be tested.
+        if (!hasSmtp() && process.env.NODE_ENV !== 'production') {
+            response.devOtp = otp;
+            response.message = "SMTP is not configured, so the code is shown here for development only.";
+        }
+
+        return res.status(200).json(response);
+    } catch (err) {
+        console.error("sendOtp error:", err);
+        return res.status(500).json({ message: "Failed to send verification code. Please try again." });
+    }
+};
 
 
 // Registration
@@ -16,7 +68,26 @@ module.exports.registerUser = async (req, res, next) => {
             return res.status(400).json({ errors: errors.array() });
         }
 
-        const { firstname, lastname, email, password } = req.body;
+        const { firstname, lastname, password, otp } = req.body;
+        const email = (req.body.email || '').toLowerCase().trim();
+
+        // Verify the email OTP before creating the account.
+        const otpDoc = await Otp.findOne({ email });
+        if (!otpDoc) {
+            return res.status(400).json({ message: "No verification code found, or it has expired. Please request a new code." });
+        }
+        if (otpDoc.attempts >= 5) {
+            await Otp.deleteOne({ _id: otpDoc._id });
+            return res.status(400).json({ message: "Too many incorrect attempts. Please request a new code." });
+        }
+        const otpMatches = await bcrypt.compare(String(otp || ''), otpDoc.otpHash);
+        if (!otpMatches) {
+            otpDoc.attempts += 1;
+            await otpDoc.save();
+            return res.status(400).json({ message: "Invalid verification code." });
+        }
+        // Code is valid; consume it so it cannot be reused.
+        await Otp.deleteOne({ _id: otpDoc._id });
 
         // Hash password
         const hashedPassword = await userModel.hashPassword(password);
