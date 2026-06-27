@@ -45,7 +45,7 @@ const RideDetails = ({ ride }) => {
         throw new Error(errorData.message || 'Failed to join/leave ride');
       }
 
-      const data = await response.json();
+      await response.json();
       setIsJoined(!isJoined);
       
       // Refresh the page to update the ride data

@@ -251,6 +251,7 @@ export const ChatProvider = ({ children }) => {
         });
 
         return newSocket;
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user, token, activeRideId]);
 
     const sendMessage = (content) => {
@@ -373,6 +374,7 @@ export const ChatProvider = ({ children }) => {
                 setMessages([]);
             }
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user?._id, token, connectSocket]);
 
     // Handle ride changes separately
@@ -411,6 +413,7 @@ export const ChatProvider = ({ children }) => {
                 setMessages([]); // Clear messages when leaving
             }
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [activeRideId, user?._id, fetchMessages]);
 
     // Add a status check for the socket in the returned value

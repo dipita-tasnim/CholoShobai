@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useChat } from '../contexts/ChatContext';
 import ChatWindow from '../components/chat/ChatWindow';
 import '../components/chat/Chat.css';
