@@ -408,7 +408,9 @@ body {
 }
 
 .horizontal-divider {
-  width: 400px;
+  flex: 1;
+  min-width: 20px;
+  max-width: 400px;
   height: 1px;
   background-color: #E5E7EB;
   margin: 0 10px; /* Adds spacing around the line */
@@ -496,6 +498,64 @@ body {
 .join-button.joined {
   background-color: #4CAF50; /* Green background when joined */
   color: white;              /* Keep text color white */
+}
+
+/* Ride card action buttons: View Riders + Connect */
+.ride-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid #F1F5F9;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+.btn-view-riders {
+  background-color: #fff;
+  color: #0F172A;
+  border: 1px solid #CBD5E1;
+  padding: 0.6rem 1.2rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-view-riders:hover {
+  background-color: #F1F5F9;
+  border-color: #94A3B8;
+}
+
+.btn-connect {
+  background-color: #2563EB;
+  color: #fff;
+  border: none;
+  padding: 0.6rem 1.6rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-connect:hover {
+  background-color: #1D4ED8;
+}
+
+.btn-connect.connected {
+  background-color: #16A34A;
+}
+
+.btn-connect.connected:hover {
+  background-color: #15803D;
+}
+
+.btn-connect:disabled {
+  background-color: #CBD5E1;
+  color: #64748B;
+  cursor: not-allowed;
 }
 
 .status-buttons {
@@ -1716,4 +1776,88 @@ body, html, #root {
 .conversation-preview p.unread {
   color: #1976d2;
   font-weight: 500;
-} 
+}
+
+/* ===== Responsive layout (mobile and tablet) ===== */
+@media (max-width: 768px) {
+  /* Sidebar becomes a top bar instead of a fixed side column */
+  .main-container {
+    flex-direction: column;
+  }
+  .sidebar {
+    position: static;
+    width: 100%;
+    height: auto;
+  }
+  .sidebar-container {
+    height: auto;
+    padding: 1rem 1.25rem;
+  }
+  .sidebar-title {
+    margin: 0 0 0.75rem;
+    padding-bottom: 0.75rem;
+  }
+  .sidebar-nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-top: 0.75rem;
+    gap: 0.4rem;
+  }
+  .sidebar-link {
+    margin-bottom: 0;
+    padding: 0.5rem 0.85rem;
+    font-size: 0.9rem;
+  }
+  .sidebar-user {
+    margin-top: 1rem;
+    padding-top: 1rem;
+  }
+  .content-area,
+  .content-area.with-sidebar {
+    margin-left: 0;
+    padding: 1rem;
+  }
+
+  /* Home and ride cards */
+  .home-wrapper {
+    padding: 1rem;
+  }
+  .ride-card {
+    padding: 1.1rem;
+  }
+  .horizontal-divider {
+    max-width: 120px;
+  }
+  .ride-thin-divider {
+    display: none;
+  }
+  .ride-bottom-row {
+    gap: 1rem 1.25rem;
+  }
+  .ride-actions {
+    justify-content: stretch;
+  }
+  .ride-actions button {
+    flex: 1;
+  }
+
+  /* Search bar fields wrap cleanly */
+  .search-field {
+    max-width: none;
+  }
+
+  /* Chat page stacks instead of side by side */
+  .chat-container {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .content-area,
+  .content-area.with-sidebar {
+    padding: 0.75rem;
+  }
+  .home-title {
+    font-size: 1.25rem;
+  }
+}

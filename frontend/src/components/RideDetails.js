@@ -47,9 +47,6 @@ const RideDetails = ({ ride }) => {
 
       await response.json();
       setIsJoined(!isJoined);
-      
-      // Refresh the page to update the ride data
-      window.location.reload();
     } catch (error) {
       console.error('Error joining/leaving ride:', error);
       alert(error.message);
@@ -94,25 +91,25 @@ const RideDetails = ({ ride }) => {
           <span className="detail-title">Preference</span>
           <span>{ride.preference}</span>
         </div>
-        <div className="ride-thin-divider" />
+      </div>
 
-        <div className="join-section">
-          <button
-            className="join-icon"
-            onClick={handleProfileClick}
-            title="View Rider Profile"
-          >
-             👥
-          </button>
+      <div className="ride-actions">
+        <button
+          type="button"
+          className="btn-view-riders"
+          onClick={handleProfileClick}
+        >
+          View Riders
+        </button>
 
-          <button
-            className={`join-button ${isJoined ? "joined" : ""}`}
-            disabled={!isOpen}
-            onClick={toggleJoin}
-          >
-            {isJoined ? "Joined" : "Join Ride"}
-          </button>
-        </div>
+        <button
+          type="button"
+          className={`btn-connect ${isJoined ? "connected" : ""}`}
+          disabled={!isOpen}
+          onClick={toggleJoin}
+        >
+          {!isOpen ? "Ride Closed" : isJoined ? "Connected" : "Connect"}
+        </button>
       </div>
     </div>
   );
