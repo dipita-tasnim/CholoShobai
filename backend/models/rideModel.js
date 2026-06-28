@@ -27,6 +27,9 @@ const rideSchema = new Schema({
         type: String,
         required: true
     },
+    phone: {
+        type: String // optional contact number provided by the poster
+    },
     status: {
         type: String,
         enum: ["open", "closed"],

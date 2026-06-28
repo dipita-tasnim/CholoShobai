@@ -157,6 +157,18 @@ const RideConfirmation = () => {
       <h2>Ride Confirmation</h2>
       {error && <p style={{ color: "red" }}>{error}</p>}
 
+      <h3>Posted By</h3>
+      <div className="user-list">
+        <div className="user-card2">
+          <span className="owner-tag">Ride Owner</span>
+          <p><strong>Full Name:</strong> {rideDetails.user_id?.fullname?.firstname} {rideDetails.user_id?.fullname?.lastname}</p>
+          <p><strong>Email:</strong> {rideDetails.user_id?.email}</p>
+          {rideDetails.phone && (
+            <p><strong>Phone:</strong> {rideDetails.phone}</p>
+          )}
+        </div>
+      </div>
+
       <h3>Joined Users</h3>
       {joinedUsers.length > 0 ? (
         <div className="user-list">

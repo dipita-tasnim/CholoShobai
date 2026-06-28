@@ -121,7 +121,7 @@ const getMyChatRides = async (req, res) => {
 
 // Create a new ride
 const createRide = async (req, res) => {
-  const { startingPoint, destination, date, time, availableSlots, preference } = req.body;
+  const { startingPoint, destination, date, time, availableSlots, preference, phone } = req.body;
 
   try {
     const ride = await Ride.create({
@@ -131,6 +131,7 @@ const createRide = async (req, res) => {
       time,
       availableSlots,
       preference,
+      phone,
       user_id: req.user._id
     });
 
