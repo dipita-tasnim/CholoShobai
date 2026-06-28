@@ -58,7 +58,7 @@ body {
   margin-top: 0.5rem; /* Adjust this to move the title closer to the top */
   margin-bottom: 1.5rem; /* Increased space between title and the line */
   color: white;
-  font-family: 'Pacifico', cursive;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   text-decoration: none; /* Ensures the title has no underline */
   border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Light white thin line under the title */
   padding-bottom: 1rem; /* Adds space between title and line */
@@ -1779,41 +1779,30 @@ body, html, #root {
 
 /* ===== Responsive layout (mobile and tablet) ===== */
 @media (max-width: 768px) {
-  /* Sidebar becomes a top bar instead of a fixed side column */
-  .main-container {
-    flex-direction: column;
-  }
+  /* Keep the sidebar as a vertical side column, just slimmer */
   .sidebar {
-    position: static;
-    width: 100%;
-    height: auto;
+    width: 160px;
   }
   .sidebar-container {
-    height: auto;
-    padding: 1rem 1.25rem;
+    padding: 1.25rem 0.75rem;
   }
   .sidebar-title {
-    margin: 0 0 0.75rem;
+    font-size: 1.15rem;
+    margin-bottom: 1rem;
     padding-bottom: 0.75rem;
   }
   .sidebar-nav {
-    flex-direction: row;
-    flex-wrap: wrap;
-    margin-top: 0.75rem;
-    gap: 0.4rem;
+    margin-top: 1.5rem;
   }
   .sidebar-link {
-    margin-bottom: 0;
-    padding: 0.5rem 0.85rem;
-    font-size: 0.9rem;
+    padding: 0.55rem 0.6rem;
+    font-size: 0.85rem;
   }
   .sidebar-user {
-    margin-top: 1rem;
-    padding-top: 1rem;
+    font-size: 0.85rem;
   }
-  .content-area,
   .content-area.with-sidebar {
-    margin-left: 0;
+    margin-left: 160px;
     padding: 1rem;
   }
 
@@ -1822,16 +1811,16 @@ body, html, #root {
     padding: 1rem;
   }
   .ride-card {
-    padding: 1.1rem;
+    padding: 1rem;
   }
   .horizontal-divider {
-    max-width: 120px;
+    max-width: 100px;
   }
   .ride-thin-divider {
     display: none;
   }
   .ride-bottom-row {
-    gap: 1rem 1.25rem;
+    gap: 1rem;
   }
   .ride-actions {
     justify-content: stretch;
@@ -1852,11 +1841,24 @@ body, html, #root {
 }
 
 @media (max-width: 480px) {
-  .content-area,
+  .sidebar {
+    width: 140px;
+  }
+  .sidebar-container {
+    padding: 1rem 0.5rem;
+  }
+  .sidebar-title {
+    font-size: 1rem;
+  }
+  .sidebar-link {
+    padding: 0.5rem;
+    font-size: 0.8rem;
+  }
   .content-area.with-sidebar {
+    margin-left: 140px;
     padding: 0.75rem;
   }
   .home-title {
-    font-size: 1.25rem;
+    font-size: 1.2rem;
   }
 }
