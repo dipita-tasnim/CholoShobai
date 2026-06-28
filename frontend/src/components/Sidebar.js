@@ -8,6 +8,7 @@ const Sidebar = () => {
   const [userName, setUserName] = useState("");
   const [error, setError] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     
@@ -52,33 +53,52 @@ const Sidebar = () => {
     fetchProfile();
 
     }, []);
+  const closeSidebar = () => setIsOpen(false);
+
   return (
-    <aside className="sidebar">
-      <div className="sidebar-container">
-        <Link to="/">
-          <h1 className="sidebar-title">CholoShobai</h1>
-        </Link>
+    <>
+      {/* Hamburger toggle, shown only on mobile */}
+      <button
+        type="button"
+        className="menu-toggle"
+        aria-label="Open menu"
+        onClick={() => setIsOpen(true)}
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
 
-        <nav className="sidebar-nav">
-          {isAdmin && (
-            <Link to="/admin" className="sidebar-link admin-link">Admin Dashboard</Link>
-          )}
-          <Link to="/home" className="sidebar-link">Home</Link>
-          <Link to="/profile" className="sidebar-link">Profile</Link>
-          <Link to="/myrides" className="sidebar-link">My Rides</Link>
-          <Link to="/search-users" className="sidebar-link">Rating</Link>
-          <Link to="/logout" className="sidebar-link">Logout</Link>
-        </nav>
+      {/* Dim background while the drawer is open */}
+      {isOpen && <div className="sidebar-overlay" onClick={closeSidebar} />}
 
-        {/* Show logged-in user's name */}
-        <div className="sidebar-user">
-          {userName ? <>👤 {userName}</> : "Not logged in"}
+      <aside className={`sidebar ${isOpen ? "open" : ""}`}>
+        <div className="sidebar-container">
+          <Link to="/" onClick={closeSidebar}>
+            <h1 className="sidebar-title">CholoShobai</h1>
+          </Link>
+
+          <nav className="sidebar-nav" onClick={closeSidebar}>
+            {isAdmin && (
+              <Link to="/admin" className="sidebar-link admin-link">Admin Dashboard</Link>
+            )}
+            <Link to="/home" className="sidebar-link">Home</Link>
+            <Link to="/profile" className="sidebar-link">Profile</Link>
+            <Link to="/myrides" className="sidebar-link">My Rides</Link>
+            <Link to="/search-users" className="sidebar-link">Rating</Link>
+            <Link to="/logout" className="sidebar-link">Logout</Link>
+          </nav>
+
+          {/* Show logged-in user's name */}
+          <div className="sidebar-user">
+            {userName ? <>👤 {userName}</> : "Not logged in"}
+          </div>
+
+          {/* Show error message if there's an issue fetching the profile */}
+          {error && <p>{error}</p>}
         </div>
-
-        {/* Show error message if there's an issue fetching the profile */}
-        {error && <p>{error}</p>}
-      </div>
-    </aside>
+      </aside>
+    </>
   );
 };
 

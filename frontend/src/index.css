@@ -1,6 +1,7 @@
 html, body {
   height: 100%;
   margin: 0;
+  overflow-x: hidden; /* never allow horizontal sliding */
 }
 
 
@@ -31,10 +32,46 @@ body {
   flex-direction: column;
 
   position: fixed;           /* Make it fixed */
-  
-  height: 100vh; /* full height */             /* Full height of the viewport */
+
   top: 0;
   left: 0;
+  bottom: 0;                 /* Stretch to the full height reliably */
+}
+
+/* Hamburger toggle button (shown only on mobile) */
+.menu-toggle {
+  display: none;
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 1100;
+  width: 44px;
+  height: 44px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  background-color: #0F172A;
+  border: none;
+  border-radius: 8px;
+  padding: 0;
+  cursor: pointer;
+}
+
+.menu-toggle span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background-color: #fff;
+  border-radius: 2px;
+}
+
+/* Dim overlay behind the drawer */
+.sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.45);
+  z-index: 1150;
 }
 
 .sidebar-container {
@@ -106,6 +143,8 @@ body {
   flex: 1;
   padding: 2rem;
   background-color: #F1F5F9;
+  box-sizing: border-box;
+  min-width: 0; /* allow the flex child to shrink instead of overflowing */
 }
 
 .content-area.with-sidebar {
@@ -1779,31 +1818,28 @@ body, html, #root {
 
 /* ===== Responsive layout (mobile and tablet) ===== */
 @media (max-width: 768px) {
-  /* Keep the sidebar as a vertical side column, just slimmer */
+  /* Show the hamburger toggle */
+  .menu-toggle {
+    display: flex;
+  }
+
+  /* Sidebar becomes a slide-in drawer, hidden off-screen by default */
   .sidebar {
-    width: 160px;
+    width: 250px;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: 1200;
   }
-  .sidebar-container {
-    padding: 1.25rem 0.75rem;
+  .sidebar.open {
+    transform: translateX(0);
+    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
   }
-  .sidebar-title {
-    font-size: 1.15rem;
-    margin-bottom: 1rem;
-    padding-bottom: 0.75rem;
-  }
-  .sidebar-nav {
-    margin-top: 1.5rem;
-  }
-  .sidebar-link {
-    padding: 0.55rem 0.6rem;
-    font-size: 0.85rem;
-  }
-  .sidebar-user {
-    font-size: 0.85rem;
-  }
+
+  /* Content takes the full width; leave room at the top for the toggle */
+  .content-area,
   .content-area.with-sidebar {
-    margin-left: 160px;
-    padding: 1rem;
+    margin-left: 0;
+    padding: 4rem 1rem 1rem;
   }
 
   /* Home and ride cards */
@@ -1841,22 +1877,9 @@ body, html, #root {
 }
 
 @media (max-width: 480px) {
-  .sidebar {
-    width: 140px;
-  }
-  .sidebar-container {
-    padding: 1rem 0.5rem;
-  }
-  .sidebar-title {
-    font-size: 1rem;
-  }
-  .sidebar-link {
-    padding: 0.5rem;
-    font-size: 0.8rem;
-  }
+  .content-area,
   .content-area.with-sidebar {
-    margin-left: 140px;
-    padding: 0.75rem;
+    padding: 3.75rem 0.75rem 0.75rem;
   }
   .home-title {
     font-size: 1.2rem;
