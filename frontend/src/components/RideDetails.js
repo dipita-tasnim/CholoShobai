@@ -89,7 +89,7 @@ const RideDetails = ({ ride }) => {
         <div className="ride-thin-divider" />
         <div className="ride-detail-block">
           <span className="detail-title">Preference</span>
-          <span>{ride.preference}</span>
+          <span>{ride.preference === "Both" ? "Male/Female" : ride.preference}</span>
         </div>
       </div>
 

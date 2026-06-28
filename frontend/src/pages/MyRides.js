@@ -95,7 +95,7 @@ const MyRides = () => {
                 <p><strong>Date:</strong> {ride.date}</p>
                 <p><strong>Time:</strong> {ride.time}</p>
                 <p><strong>Slots:</strong> {ride.availableSlots}</p>
-                <p><strong>Preference:</strong> {ride.preference}</p>
+                <p><strong>Preference:</strong> {ride.preference === "Both" ? "Male/Female" : ride.preference}</p>
                 <p><strong>Status:</strong> {ride.status || "closed"}</p>
 
                 <div className="status-buttons">
