@@ -30,7 +30,7 @@ const rideSchema = new Schema({
     status: {
         type: String,
         enum: ["open", "closed"],
-        default: "closed"
+        default: "open"
     },
 
     user_id: { // renamed from createdBy to match controller
