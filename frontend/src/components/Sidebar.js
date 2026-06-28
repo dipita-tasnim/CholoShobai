@@ -60,13 +60,13 @@ const Sidebar = () => {
         </Link>
 
         <nav className="sidebar-nav">
-          <Link to="/home" className="sidebar-link">Home</Link>
-          <Link to="/profile" className="sidebar-link">Profile</Link>
-          <Link to="/myrides" className="sidebar-link">My Rides</Link>         
-          <Link to="/search-users" className="sidebar-link">Rating</Link>
           {isAdmin && (
             <Link to="/admin" className="sidebar-link admin-link">Admin Dashboard</Link>
           )}
+          <Link to="/home" className="sidebar-link">Home</Link>
+          <Link to="/profile" className="sidebar-link">Profile</Link>
+          <Link to="/myrides" className="sidebar-link">My Rides</Link>
+          <Link to="/search-users" className="sidebar-link">Rating</Link>
           <Link to="/logout" className="sidebar-link">Logout</Link>
         </nav>
 
