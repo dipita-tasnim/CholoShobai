@@ -74,16 +74,18 @@ const MyProfile = () => {
           phone: form.phone.trim(),
         }),
       });
-      const json = await response.json();
+      let json = null;
+      try { json = await response.json(); } catch (e) { /* response was not JSON */ }
+
       if (!response.ok) {
-        setError(json.message || "Failed to update profile.");
+        setError((json && json.message) || `Update failed (${response.status}). The server may still be deploying, please try again in a minute.`);
         return;
       }
       setUser(json);
       setEditing(false);
       setSuccess("Profile updated successfully.");
     } catch (err) {
-      setError("Something went wrong. Please try again.");
+      setError("Could not reach the server. Please try again in a minute.");
     } finally {
       setSaving(false);
     }

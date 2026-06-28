@@ -203,7 +203,7 @@ module.exports.updateProfile = async (req, res) => {
         const user = await userModel.findByIdAndUpdate(
             req.user._id,
             update,
-            { new: true, runValidators: true }
+            { new: true }
         ).select('-password');
 
         if (!user) {
