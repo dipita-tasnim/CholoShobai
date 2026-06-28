@@ -108,7 +108,7 @@ const RideDetails = ({ ride }) => {
           disabled={!isOpen}
           onClick={toggleJoin}
         >
-          {!isOpen ? "Ride Closed" : isJoined ? "Connected" : "Connect"}
+          {!isOpen ? "Closed" : isJoined ? "Connected" : "Connect"}
         </button>
       </div>
     </div>
