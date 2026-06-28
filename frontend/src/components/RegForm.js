@@ -11,6 +11,7 @@ const RegForm = () => {
     const [lastname, setLastname] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [phone, setPhone] = useState("");
     const [otp, setOtp] = useState("");
 
     const [step, setStep] = useState("details"); // "details" or "verify"
@@ -77,7 +78,7 @@ const RegForm = () => {
             const response = await fetch(`${API_BASE}/users/register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ firstname, lastname, email, password, otp: otp.trim() })
+                body: JSON.stringify({ firstname, lastname, email, password, phone: phone.trim(), otp: otp.trim() })
             });
             const json = await response.json();
 
@@ -149,6 +150,9 @@ const RegForm = () => {
 
                     <label>Password:</label>
                     <input type="password" onChange={(e) => setPassword(e.target.value)} value={password} required />
+
+                    <label>Phone (optional):</label>
+                    <input type="tel" onChange={(e) => setPhone(e.target.value)} value={phone} />
 
                     <button className="register-button" disabled={loading}>
                         {loading ? "Sending code..." : "Send Verification Code"}

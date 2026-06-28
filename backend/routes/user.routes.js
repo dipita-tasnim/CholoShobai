@@ -40,6 +40,9 @@ router.get('/search', authMiddleware.authUser, userController.searchUsers);
 // profile route
 router.get('/profile', authMiddleware.authUser, userController.getUserProfile);
 
+// update own profile
+router.put('/profile', authMiddleware.authUser, userController.updateProfile);
+
 // Fetch user by ID
 router.get('/:id', authMiddleware.authUser, userController.getUserById);
 

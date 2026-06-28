@@ -14,7 +14,6 @@ const RideForm = () => {
     const [time, setTime] = useState("");
     const [availableSlots, setAvailableSlots] = useState("");
     const [preference, setPreference] = useState("");
-    const [phone, setPhone] = useState("");
     const [error, setError] = useState(null);
 
     const handleSubmit = async (e) => {
@@ -41,8 +40,7 @@ const RideForm = () => {
             date: formattedDate,
             time: formattedTime,
             availableSlots,
-            preference,
-            phone: phone.trim()
+            preference
         };
 
         const token = localStorage.getItem("token");
@@ -66,7 +64,6 @@ const RideForm = () => {
             setTime('')
             setAvailableSlots('')
             setPreference('')
-            setPhone('')
             setError(null)
             navigate('/home')
         }
@@ -125,12 +122,6 @@ const RideForm = () => {
                 <option value="Female">Female</option>
                 <option value="Both">Male/Female</option>
             </select>
-            <label>Phone (optional):</label>
-            <input
-                type="tel"
-                onChange={(e) => setPhone(e.target.value)}
-                value={phone}
-            />
             <button className="post-button">+ POST</button>
         </form>
     )

@@ -68,7 +68,7 @@ module.exports.registerUser = async (req, res, next) => {
             return res.status(400).json({ errors: errors.array() });
         }
 
-        const { firstname, lastname, password, otp } = req.body;
+        const { firstname, lastname, password, otp, phone } = req.body;
         const email = (req.body.email || '').toLowerCase().trim();
 
         // Verify the email OTP before creating the account.
@@ -97,7 +97,8 @@ module.exports.registerUser = async (req, res, next) => {
             firstname,
             lastname,
             email,
-            password: hashedPassword
+            password: hashedPassword,
+            phone
         });
 
         // Create token
@@ -187,6 +188,35 @@ module.exports.logoutUser = async (req, res) => {
 module.exports.getUserProfile = async (req, res) => {
     const user = await userModel.findById(req.user._id);
     res.status(200).json(user);
+};
+
+// Update the logged-in user's own profile (name, email, phone)
+module.exports.updateProfile = async (req, res) => {
+    try {
+        const { firstname, lastname, email, phone } = req.body;
+        const update = {};
+        if (firstname !== undefined) update['fullname.firstname'] = firstname;
+        if (lastname !== undefined) update['fullname.lastname'] = lastname;
+        if (email !== undefined) update.email = email.toLowerCase().trim();
+        if (phone !== undefined) update.phone = phone;
+
+        const user = await userModel.findByIdAndUpdate(
+            req.user._id,
+            update,
+            { new: true, runValidators: true }
+        ).select('-password');
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        res.status(200).json(user);
+    } catch (err) {
+        if (err.code === 11000) {
+            return res.status(400).json({ message: "That email is already in use." });
+        }
+        res.status(500).json({ message: "Failed to update profile", error: err.message });
+    }
 };
 
 //all users

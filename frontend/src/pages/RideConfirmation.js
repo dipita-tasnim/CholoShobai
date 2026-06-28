@@ -163,8 +163,8 @@ const RideConfirmation = () => {
           <span className="owner-tag">Ride Owner</span>
           <p><strong>Full Name:</strong> {rideDetails.user_id?.fullname?.firstname} {rideDetails.user_id?.fullname?.lastname}</p>
           <p><strong>Email:</strong> {rideDetails.user_id?.email}</p>
-          {rideDetails.phone && (
-            <p><strong>Phone:</strong> {rideDetails.phone}</p>
+          {rideDetails.user_id?.phone && (
+            <p><strong>Phone:</strong> {rideDetails.user_id.phone}</p>
           )}
         </div>
       </div>
@@ -182,6 +182,9 @@ const RideConfirmation = () => {
                 {isItemOwner && <span className="owner-tag">Ride Owner</span>}
                 <p><strong>Full Name:</strong> {user.fullname?.firstname} {user.fullname?.lastname}</p>
                 <p><strong>Email:</strong> {user.email}</p>
+                {user.phone && (
+                  <p><strong>Phone:</strong> {user.phone}</p>
+                )}
                 {!isItemOwner && (
                   <p>
                     <strong>Status:</strong>{' '}

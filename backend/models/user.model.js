@@ -21,6 +21,9 @@ const userSchema = new mongoose.Schema({
         unique: true,
         minlength:[5,"Email address is required"]
     },
+    phone: {
+        type: String // optional contact number
+    },
     password: {
         type: String,
         required: true,

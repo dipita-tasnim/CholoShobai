@@ -62,10 +62,10 @@ const getRide = async (req, res) => {
 
   try {
     const ride = await Ride.findById(id)
-      .populate('user_id', 'fullname email')
+      .populate('user_id', 'fullname email phone')
       .populate({
         path: 'joinedUserIds.user',
-        select: 'fullname email'
+        select: 'fullname email phone'
       });
     
     if (!ride) {
@@ -121,7 +121,7 @@ const getMyChatRides = async (req, res) => {
 
 // Create a new ride
 const createRide = async (req, res) => {
-  const { startingPoint, destination, date, time, availableSlots, preference, phone } = req.body;
+  const { startingPoint, destination, date, time, availableSlots, preference } = req.body;
 
   try {
     const ride = await Ride.create({
@@ -131,7 +131,6 @@ const createRide = async (req, res) => {
       time,
       availableSlots,
       preference,
-      phone,
       user_id: req.user._id
     });
 
