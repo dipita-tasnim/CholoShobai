@@ -512,24 +512,23 @@ body {
 }
 
 .btn-view-riders {
-  background-color: #fff;
-  color: #0F172A;
-  border: 1px solid #CBD5E1;
+  background-color: #0F172A;
+  color: #fff;
+  border: none;
   padding: 0.6rem 1.2rem;
   font-size: 0.9rem;
   font-weight: 600;
   border-radius: 0.75rem;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background-color 0.2s ease;
 }
 
 .btn-view-riders:hover {
-  background-color: #F1F5F9;
-  border-color: #94A3B8;
+  background-color: #334155;
 }
 
 .btn-connect {
-  background-color: #2563EB;
+  background-color: #0F172A;
   color: #fff;
   border: none;
   padding: 0.6rem 1.6rem;
@@ -541,7 +540,7 @@ body {
 }
 
 .btn-connect:hover {
-  background-color: #1D4ED8;
+  background-color: #334155;
 }
 
 .btn-connect.connected {
