@@ -1942,6 +1942,16 @@ body, html, #root {
   color: #b91c1c;
 }
 
+.status-badge.status-open {
+  background-color: #dcfce7; /* light green */
+  color: #15803d;
+}
+
+.status-badge.status-closed {
+  background-color: #fee2e2; /* light red */
+  color: #b91c1c;
+}
+
 /* Contain the embedded ride chat so only the message history scrolls,
    not the whole Joined Users page */
 .ride-chat-section .chat-window {

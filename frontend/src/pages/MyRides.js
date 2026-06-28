@@ -96,7 +96,12 @@ const MyRides = () => {
                 <p><strong>Time:</strong> {ride.time}</p>
                 <p><strong>Slots:</strong> {ride.availableSlots}</p>
                 <p><strong>Preference:</strong> {ride.preference === "Both" ? "Male/Female" : ride.preference}</p>
-                <p><strong>Status:</strong> {ride.status || "closed"}</p>
+                <p>
+                  <strong>Status:</strong>{" "}
+                  <span className={`status-badge status-${ride.status || "open"}`}>
+                    {ride.status || "open"}
+                  </span>
+                </p>
 
                 <div className="status-buttons">
                   <button
