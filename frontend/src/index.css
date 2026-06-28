@@ -516,8 +516,8 @@ body {
   color: #fff;
   border: none;
   padding: 0.6rem 1.2rem;
-  font-size: 0.9rem;
-  font-weight: 600;
+  font-size: 0.95rem;
+  font-weight: normal;
   border-radius: 0.75rem;
   cursor: pointer;
   transition: background-color 0.2s ease;
@@ -532,8 +532,8 @@ body {
   color: #fff;
   border: none;
   padding: 0.6rem 1.6rem;
-  font-size: 0.9rem;
-  font-weight: 600;
+  font-size: 0.95rem;
+  font-weight: normal;
   border-radius: 0.75rem;
   cursor: pointer;
   transition: background-color 0.2s ease;
