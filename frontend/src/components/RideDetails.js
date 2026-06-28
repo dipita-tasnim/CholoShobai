@@ -99,7 +99,7 @@ const RideDetails = ({ ride }) => {
           className="btn-view-riders"
           onClick={handleProfileClick}
         >
-          View Riders
+          See Who's Going
         </button>
 
         <button
