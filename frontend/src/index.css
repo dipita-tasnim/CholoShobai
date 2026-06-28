@@ -1910,3 +1910,18 @@ body, html, #root {
   background-color: #fee2e2; /* light red */
   color: #b91c1c;
 }
+
+/* Contain the embedded ride chat so only the message history scrolls,
+   not the whole Joined Users page */
+.ride-chat-section .chat-window {
+  height: 440px;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+@media (max-width: 768px) {
+  .ride-chat-section .chat-window {
+    height: 380px;
+  }
+}
