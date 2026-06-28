@@ -171,7 +171,12 @@ const RideConfirmation = () => {
                 <p><strong>Full Name:</strong> {user.fullname?.firstname} {user.fullname?.lastname}</p>
                 <p><strong>Email:</strong> {user.email}</p>
                 {!isItemOwner && (
-                  <p><strong>Status:</strong> {item.status}</p>
+                  <p>
+                    <strong>Status:</strong>{' '}
+                    <span className={`status-badge status-${item.status}`}>
+                      {item.status}
+                    </span>
+                  </p>
                 )}
                 {isOwner && !isItemOwner && (
                   <div className="confirmation-buttons">
