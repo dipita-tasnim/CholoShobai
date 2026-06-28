@@ -104,17 +104,27 @@ const RideForm = () => {
                 value={time}
             />
             <label>Available Slots:</label>
-            <input
-                type="text"
-                onChange={(e) => setAvailableSlots(e.target.value)}
+            <select
                 value={availableSlots}
-            />
+                onChange={(e) => setAvailableSlots(e.target.value)}
+                required
+            >
+                <option value="" disabled>Select number of slots</option>
+                {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
+                    <option key={n} value={n}>{n}</option>
+                ))}
+            </select>
             <label>Preference (Male/Female):</label>
-            <input
-                type="text"
-                onChange={(e) => setPreference(e.target.value)}
+            <select
                 value={preference}
-            />
+                onChange={(e) => setPreference(e.target.value)}
+                required
+            >
+                <option value="" disabled>Select preference</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Both">Both</option>
+            </select>
             <label>Phone (optional):</label>
             <input
                 type="tel"
