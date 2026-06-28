@@ -123,7 +123,7 @@ const RideForm = () => {
                 <option value="" disabled>Select preference</option>
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
-                <option value="Both">Both</option>
+                <option value="Both">Male/Female</option>
             </select>
             <label>Phone (optional):</label>
             <input

@@ -677,6 +677,22 @@ input {
   cursor: pointer;
 }
 
+/* Lighter, slightly smaller placeholder while nothing is selected */
+.create select:invalid {
+  color: #9ca3af;
+  font-size: 0.9rem;
+}
+
+.create select option {
+  color: #1f2937;
+  font-size: 1rem;
+}
+
+.create select option:disabled {
+  color: #9ca3af;
+  font-size: 0.9rem;
+}
+
 .post-button {
   background-color: #0F172A;
   border: 0;
