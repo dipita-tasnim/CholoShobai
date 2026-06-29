@@ -18,6 +18,7 @@ const RideConfirmation = () => {
   const [loadingRide, setLoadingRide] = useState(true);
   const [errorRide, setErrorRide] = useState(null);
   const [currentUserRideStatus, setCurrentUserRideStatus] = useState(null);
+  const [userRatings, setUserRatings] = useState({});
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -111,6 +112,57 @@ const RideConfirmation = () => {
     }
   }, [joinedUsers, currentUserId, rideDetails]);
 
+  // Fetch the average rating for the owner and every joined user
+  useEffect(() => {
+    if (!rideDetails) return;
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    const ids = new Set();
+    const ownerId = rideDetails.user_id?._id || rideDetails.user_id;
+    if (ownerId) ids.add(String(ownerId));
+    joinedUsers.forEach((item) => {
+      const uid = item.user?._id || item.user;
+      if (uid) ids.add(String(uid));
+    });
+
+    let cancelled = false;
+    (async () => {
+      const entries = await Promise.all(
+        Array.from(ids).map(async (uid) => {
+          try {
+            const res = await fetch(`${API_BASE}/api/ratings/user/${uid}`, {
+              headers: { Authorization: `Bearer ${token}` },
+            });
+            if (!res.ok) return [uid, { average: 0, count: 0 }];
+            const data = await res.json();
+            const count = data.count ?? (data.ratings ? data.ratings.length : 0);
+            return [uid, { average: data.averageRating || 0, count }];
+          } catch (e) {
+            return [uid, { average: 0, count: 0 }];
+          }
+        })
+      );
+      if (!cancelled) setUserRatings(Object.fromEntries(entries));
+    })();
+
+    return () => { cancelled = true; };
+  }, [rideDetails, joinedUsers]);
+
+  const renderRating = (uid) => {
+    const r = userRatings[String(uid)];
+    if (!r || r.count === 0) {
+      return <span className="rc-rating-meta">No ratings yet</span>;
+    }
+    const rounded = Math.round(r.average);
+    return (
+      <>
+        <span className="rc-stars">{'★'.repeat(rounded)}{'☆'.repeat(5 - rounded)}</span>{' '}
+        <span className="rc-rating-meta">{r.average.toFixed(1)} ({r.count})</span>
+      </>
+    );
+  };
+
   const handleAction = async (userId, status) => {
     const token = localStorage.getItem("token");
     if (!token) return;
@@ -166,6 +218,7 @@ const RideConfirmation = () => {
           {rideDetails.user_id?.phone && (
             <p><strong>Phone:</strong> {rideDetails.user_id.phone}</p>
           )}
+          <p><strong>Rating:</strong> {renderRating(rideDetails.user_id?._id || rideDetails.user_id)}</p>
         </div>
       </div>
 
@@ -185,6 +238,7 @@ const RideConfirmation = () => {
                 {user.phone && (
                   <p><strong>Phone:</strong> {user.phone}</p>
                 )}
+                <p><strong>Rating:</strong> {renderRating(userId)}</p>
                 {!isItemOwner && (
                   <p>
                     <strong>Status:</strong>{' '}

@@ -2146,6 +2146,18 @@ body, html, #root {
   color: #b91c1c;
 }
 
+/* Rating stars on the ride confirmation page */
+.rc-stars {
+  color: #f59e0b;
+  letter-spacing: 2px;
+  white-space: nowrap;
+}
+
+.rc-rating-meta {
+  color: #6B7280;
+  font-size: 0.85rem;
+}
+
 .status-badge.status-open {
   background-color: #dcfce7; /* light green */
   color: #15803d;
