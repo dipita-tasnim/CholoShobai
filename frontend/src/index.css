@@ -88,17 +88,35 @@ body {
   text-decoration: none;
 }
 
+/* Brand row: logo + title at the top of the sidebar */
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  margin-top: 0.5rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.sidebar-logo {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  background: #fff;
+  border-radius: 8px;
+  padding: 3px;
+  flex-shrink: 0;
+}
+
 .sidebar-title {
   font-size: 1.5rem;
   font-weight: bold;
-
-  margin-top: 0.5rem; /* Adjust this to move the title closer to the top */
-  margin-bottom: 1.5rem; /* Increased space between title and the line */
+  margin: 0;
   color: white;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  text-decoration: none; /* Ensures the title has no underline */
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Light white thin line under the title */
-  padding-bottom: 1rem; /* Adds space between title and line */
+  text-decoration: none;
 }
 
 
@@ -932,9 +950,17 @@ body, html {
 }
 
 .landing-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   font-size: 1.5rem;
   font-weight: 700;
   color: #0F172A;
+}
+
+.brand-logo {
+  height: 36px;
+  width: auto;
 }
 
 .landing-nav-actions {

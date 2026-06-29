@@ -39,7 +39,10 @@ const LandingPage = () => {
   return (
     <div className="landing">
       <nav className="landing-nav">
-        <div className="landing-brand">CholoShobai</div>
+        <div className="landing-brand">
+          <img src="/logo.png" alt="CholoShobai" className="brand-logo" />
+          <span>CholoShobai</span>
+        </div>
         <div className="landing-nav-actions">
           <button className="lp-btn lp-btn-ghost" onClick={() => navigate('/login')}>Login</button>
           <button className="lp-btn lp-btn-primary" onClick={() => navigate('/registration')}>Sign Up</button>

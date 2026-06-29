@@ -74,7 +74,8 @@ const Sidebar = () => {
 
       <aside className={`sidebar ${isOpen ? "open" : ""}`}>
         <div className="sidebar-container">
-          <Link to="/" onClick={closeSidebar}>
+          <Link to="/" onClick={closeSidebar} className="sidebar-brand">
+            <img src="/logo.png" alt="CholoShobai" className="sidebar-logo" />
             <h1 className="sidebar-title">CholoShobai</h1>
           </Link>
 
