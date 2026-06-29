@@ -75,11 +75,10 @@ const Sidebar = () => {
       <aside className={`sidebar ${isOpen ? "open" : ""}`}>
         <div className="sidebar-container">
           <Link to="/" onClick={closeSidebar} className="sidebar-brand">
-            <span
+            <img
+              src={`${process.env.PUBLIC_URL}/logo1.png`}
+              alt="CholoShobai"
               className="sidebar-logo"
-              role="img"
-              aria-label="CholoShobai"
-              style={{ backgroundImage: `url(${process.env.PUBLIC_URL}/logo.png)` }}
             />
             <h1 className="sidebar-title">CholoShobai</h1>
           </Link>
