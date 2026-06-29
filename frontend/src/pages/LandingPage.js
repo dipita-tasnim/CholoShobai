@@ -89,7 +89,7 @@ const LandingPage = () => {
         <p>Making everyday travel cheaper, safer, and more connected.</p>
         <p className="footer-contact">
           Questions or feedback? Email us at{' '}
-          <a href="mailto:contact@choloshobai.app">contact@choloshobai.app</a>
+          <a href="mailto:tasnim.dipita@gmail.com">contact@choloshobai.app</a>
         </p>
         <p className="footer-copy">© 2026 CholoShobai. All rights reserved.</p>
       </footer>
