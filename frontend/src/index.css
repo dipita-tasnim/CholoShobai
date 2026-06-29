@@ -471,6 +471,14 @@ body {
   text-align: center;
 }
 
+/* Make the From/To labels light, matching the detail labels */
+.ride-from span,
+.ride-to span {
+  color: #6B7280;
+  font-size: 0.85rem;
+  margin-top: 2px;
+}
+
 .horizontal-divider {
   flex: 1;
   min-width: 20px;
@@ -1914,7 +1922,9 @@ body, html, #root {
   .ride-detail-block {
     font-size: 0.74rem;
   }
-  .detail-title {
+  .detail-title,
+  .ride-from span,
+  .ride-to span {
     font-size: 0.66rem;
     white-space: nowrap;
   }
