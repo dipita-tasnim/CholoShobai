@@ -916,58 +916,228 @@ body, html {
   height: 100%;
 }
 
-.landing-page {
+/* ===== Landing page ===== */
+.landing {
+  max-width: 1000px;
   margin: 0 auto;
-  padding: 0 20px; 
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  background: linear-gradient(to right, #0F172A, #b8c5db);
-  text-align: center;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #0F172A;
 }
 
-/* New: login/signup positioned at top-right */
-.top-buttons {
-  position: absolute;
-  top: 20px;
-  right: 30px;
+.landing-nav {
   display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.25rem 0 1.5rem;
+}
+
+.landing-brand {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0F172A;
+}
+
+.landing-nav-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.lp-btn {
+  padding: 0.55rem 1.2rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.lp-btn-primary {
+  background-color: #0F172A;
+  color: #fff;
+  border: none;
+}
+.lp-btn-primary:hover { background-color: #334155; }
+
+.lp-btn-ghost {
+  background-color: #fff;
+  color: #0F172A;
+  border: 1px solid #CBD5E1;
+}
+.lp-btn-ghost:hover { background-color: #F1F5F9; }
+
+/* Hero */
+.landing-hero {
+  background: linear-gradient(135deg, #0F172A 0%, #1E293B 55%, #1D4ED8 130%);
+  border-radius: 22px;
+  padding: 72px 28px;
+  text-align: center;
+  color: #fff;
+}
+
+.landing-hero h1 {
+  font-size: 2.7rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0 0 16px;
+}
+
+.landing-hero p {
+  font-size: 1.15rem;
+  color: #CBD5E1;
+  max-width: 620px;
+  margin: 0 auto 34px;
+  line-height: 1.6;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.lp-btn-lg {
+  padding: 0.85rem 1.8rem;
+  font-size: 1rem;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+.lp-btn-white {
+  background-color: #fff;
+  color: #0F172A;
+  border: none;
+}
+.lp-btn-white:hover { background-color: #E2E8F0; }
+
+.lp-btn-outline-white {
+  background-color: transparent;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+.lp-btn-outline-white:hover { background-color: rgba(255, 255, 255, 0.12); }
+
+/* Sections */
+.landing-section {
+  padding: 52px 0 8px;
+  text-align: center;
+}
+
+.landing-section h2 {
+  font-size: 1.8rem;
+  color: #0F172A;
+  margin: 0 0 6px;
+}
+
+.section-sub {
+  color: #6B7280;
+  margin: 0 0 32px;
+  font-size: 1rem;
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 20px;
 }
 
-.top-buttons button {
-  margin-left: 10px;
-  background-color: #0F172A;
-  color: white;
-  padding: 0.5rem 1.2rem;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+.feature-card {
+  background: #fff;
+  border: 1px solid #E5E7EB;
+  border-radius: 14px;
+  padding: 28px 22px;
+  text-align: left;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.top-buttons button:hover {
-  background-color: #334155;
+.feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 26px rgba(15, 23, 42, 0.09);
 }
 
-
-
-
-.landing-page h1 {
-  font-size: 3rem;
+.feature-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  background: #EFF6FF;
+  color: #2563EB;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin-bottom: 16px;
-  color: #ffffff;
-  
 }
 
-.landing-page p {
+.feature-card h3 {
+  margin: 0 0 8px;
+  font-size: 1.1rem;
+  color: #0F172A;
+}
+
+.feature-card p {
+  margin: 0;
+  color: #6B7280;
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+/* Trust strip */
+.landing-trust {
+  background: #F8FAFC;
+  border: 1px solid #E5E7EB;
+  border-radius: 18px;
+  padding: 40px 28px;
+  text-align: center;
+  margin-top: 28px;
+}
+
+.landing-trust h2 {
+  color: #0F172A;
+  font-size: 1.5rem;
+  margin: 0 0 10px;
+}
+
+.landing-trust p {
+  color: #6B7280;
+  max-width: 580px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* Footer */
+.landing-footer {
+  text-align: center;
+  padding: 52px 0 28px;
+  color: #6B7280;
+}
+
+.landing-footer .footer-brand {
   font-size: 1.2rem;
-  margin-bottom: 40px;
-  color: #ffffff;
+  font-weight: 700;
+  color: #0F172A;
+  margin-bottom: 6px;
+}
+
+.landing-footer p { margin: 4px 0; }
+
+.landing-footer a {
+  color: #2563EB;
+  text-decoration: none;
+}
+.landing-footer a:hover { text-decoration: underline; }
+
+.footer-copy {
+  font-size: 0.85rem;
+  margin-top: 18px;
+  color: #9CA3AF;
+}
+
+@media (max-width: 768px) {
+  .landing-hero { padding: 48px 20px; border-radius: 18px; }
+  .landing-hero h1 { font-size: 2rem; }
+  .landing-hero p { font-size: 1.02rem; }
+  .feature-grid { grid-template-columns: 1fr; }
+  .hero-actions .lp-btn-lg { width: 100%; }
 }
 
 
@@ -978,44 +1148,7 @@ body, html, #root {
   height: 100%;
 }
 
-/*  New Feature Section */
-.features-section {
-  text-align: center;
-  margin-top: 40px;
-}
-
-.features-section h2 {
-  font-size: 2rem;
-  margin-bottom: 30px;
-  color: #ffffff;
-}
-
-.features-list {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  flex-wrap: wrap;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.features-list li {
-  background-color: #ffffff;
-  padding: 20px 25px;
-  width: 250px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  font-size: 1rem;
-  font-weight: 500;
-  color: #333;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.features-list li:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-}
+/* (old landing feature-list styles removed; landing now uses .feature-grid) */
 
 /* User Search Styles */
 .user-search {
@@ -1897,10 +2030,13 @@ body, html, #root {
   }
 
   /* Content takes the full width; leave room at the top for the toggle */
-  .content-area,
+  .content-area {
+    margin-left: 0;
+    padding: 1rem;
+  }
   .content-area.with-sidebar {
     margin-left: 0;
-    padding: 4rem 1rem 1rem;
+    padding: 4rem 1rem 1rem; /* room for the hamburger button */
   }
 
   /* Home and ride cards */
@@ -1947,7 +2083,9 @@ body, html, #root {
 }
 
 @media (max-width: 480px) {
-  .content-area,
+  .content-area {
+    padding: 0.75rem;
+  }
   .content-area.with-sidebar {
     padding: 3.75rem 0.75rem 0.75rem;
   }
