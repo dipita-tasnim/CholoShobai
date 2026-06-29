@@ -47,7 +47,7 @@ const LandingPage = () => {
       </nav>
 
       <header className="landing-hero">
-        <h1>Find people going your way.</h1>
+        <h1>Find people going your way</h1>
         <p>
           CholoShobai connects you with others heading the same direction, so you can travel
           together, cheaper and safer. We do not provide vehicles, we help you find each other.
