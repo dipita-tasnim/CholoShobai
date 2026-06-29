@@ -93,47 +93,62 @@ export default function Home() {
 
       {/* Search Bar Section */}
       <form onSubmit={handleSearch} className="search-bar-section">
-        <input
-          type="text"
-          name="from"
-          className="search-field"
-          placeholder="From"
-          value={searchParams.from}
-          onChange={handleInputChange}
-        />
-        <input
-          type="text"
-          name="to"
-          className="search-field"
-          placeholder="To"
-          value={searchParams.to}
-          onChange={handleInputChange}
-        />
-        <input
-          type="date"
-          name="date"
-          className="search-field"
-          value={searchParams.date}
-          onChange={handleInputChange}
-        />
-        <input
-          type="time"
-          name="time"
-          className="search-field"
-          value={searchParams.time}
-          onChange={handleInputChange}
-        />
-        <select
-          name="preference"
-          className="search-field"
-          value={searchParams.preference}
-          onChange={handleInputChange}
-        >
-          <option value="">Preference</option>
-          <option value="Male">Male</option>
-          <option value="Female">Female</option>
-          <option value="Both">Male, Female</option>
-        </select>
+        <div className="search-field-group">
+          <label className="search-label">From</label>
+          <input
+            type="text"
+            name="from"
+            className="search-field"
+            placeholder="Starting point"
+            value={searchParams.from}
+            onChange={handleInputChange}
+          />
+        </div>
+        <div className="search-field-group">
+          <label className="search-label">To</label>
+          <input
+            type="text"
+            name="to"
+            className="search-field"
+            placeholder="Destination"
+            value={searchParams.to}
+            onChange={handleInputChange}
+          />
+        </div>
+        <div className="search-field-group">
+          <label className="search-label">Date</label>
+          <input
+            type="date"
+            name="date"
+            className="search-field"
+            value={searchParams.date}
+            onChange={handleInputChange}
+          />
+        </div>
+        <div className="search-field-group">
+          <label className="search-label">Time</label>
+          <input
+            type="time"
+            name="time"
+            className="search-field"
+            value={searchParams.time}
+            onChange={handleInputChange}
+          />
+        </div>
+        <div className="search-field-group">
+          <label className="search-label">Preference</label>
+          <select
+            name="preference"
+            className={`search-field ${searchParams.preference === "" ? "is-placeholder" : ""}`}
+            value={searchParams.preference}
+            onChange={handleInputChange}
+          >
+            <option value="">Any</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Both">Male, Female</option>
+          </select>
+        </div>
         <button type="submit" className="search-btn">Search</button>
       </form>
 
