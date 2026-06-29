@@ -101,12 +101,13 @@ body {
 }
 
 .sidebar-logo {
-  width: 40px;
-  height: 40px;
-  object-fit: contain;
-  background: #fff;
+  width: 44px;
+  height: 44px;
+  background-color: #fff;
+  background-size: 235%;        /* zoom in so the C fills the badge */
+  background-position: center;
+  background-repeat: no-repeat;
   border-radius: 8px;
-  padding: 3px;
   flex-shrink: 0;
 }
 
@@ -959,8 +960,13 @@ body, html {
 }
 
 .brand-logo {
-  height: 36px;
-  width: auto;
+  width: 40px;
+  height: 40px;
+  background-size: 235%;        /* zoom in so the C fills the frame */
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 8px;
+  flex-shrink: 0;
 }
 
 .landing-nav-actions {

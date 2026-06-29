@@ -40,7 +40,12 @@ const LandingPage = () => {
     <div className="landing">
       <nav className="landing-nav">
         <div className="landing-brand">
-          <img src="/logo.png" alt="CholoShobai" className="brand-logo" />
+          <span
+            className="brand-logo"
+            role="img"
+            aria-label="CholoShobai"
+            style={{ backgroundImage: `url(${process.env.PUBLIC_URL}/logo.png)` }}
+          />
           <span>CholoShobai</span>
         </div>
         <div className="landing-nav-actions">
