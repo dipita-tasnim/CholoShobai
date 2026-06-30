@@ -1168,6 +1168,13 @@ body, html {
   .landing-hero p { font-size: 1.02rem; }
   .hero-actions .lp-btn-lg { width: 100%; }
 
+  /* Shrink the nav so the brand, Login and Sign Up all fit in one row */
+  .landing-nav { gap: 8px; }
+  .landing-brand { font-size: 1.15rem; gap: 8px; }
+  .brand-logo { height: 32px; }
+  .landing-nav-actions { gap: 6px; flex-shrink: 0; }
+  .landing-nav .lp-btn { padding: 0.45rem 0.8rem; font-size: 0.85rem; }
+
   /* Keep the three feature cards in one horizontal row on mobile */
   .feature-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -2143,6 +2150,12 @@ body, html, #root {
   .home-title {
     font-size: 1.2rem;
   }
+
+  /* Extra shrink so the landing nav fits perfectly on small phones */
+  .landing-brand { font-size: 1.05rem; gap: 6px; }
+  .brand-logo { height: 28px; }
+  .landing-nav-actions { gap: 5px; }
+  .landing-nav .lp-btn { padding: 0.4rem 0.7rem; font-size: 0.8rem; }
 }
 
 /* Joined-user status pills (light background, colour coded) */
