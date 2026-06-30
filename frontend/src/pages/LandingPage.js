@@ -68,45 +68,12 @@ const LandingPage = () => {
           </button>
         </div>
 
-        <div className="hero-illustration" aria-hidden="true">
-          <svg viewBox="0 0 640 200" xmlns="http://www.w3.org/2000/svg">
-            {/* the shared route */}
-            <path
-              d="M 60 150 C 200 50, 440 50, 580 150"
-              fill="none"
-              stroke="rgba(255,255,255,0.3)"
-              strokeWidth="3"
-              strokeLinecap="round"
-              strokeDasharray="2 12"
-            >
-              <animate attributeName="stroke-dashoffset" from="14" to="0" dur="0.9s" repeatCount="indefinite" />
-            </path>
-
-            {/* start point */}
-            <g transform="translate(60,150)">
-              <circle r="13" fill="#ffffff" />
-              <circle r="5" fill="#0F172A" />
-            </g>
-            {/* destination point */}
-            <g transform="translate(580,150)">
-              <circle r="13" fill="#ffffff" />
-              <circle r="5" fill="#2563EB" />
-            </g>
-
-            {/* first traveller */}
-            <g>
-              <circle cx="0" cy="-10" r="5" fill="#ffffff" />
-              <rect x="-5" y="-5" width="10" height="14" rx="5" fill="#60A5FA" />
-              <animateMotion dur="4.5s" repeatCount="indefinite" rotate="0" path="M 60 150 C 200 50, 440 50, 580 150" />
-            </g>
-
-            {/* second traveller, just behind */}
-            <g>
-              <circle cx="0" cy="-10" r="5" fill="#ffffff" />
-              <rect x="-5" y="-5" width="10" height="14" rx="5" fill="#FBBF24" />
-              <animateMotion dur="4.5s" begin="0.7s" repeatCount="indefinite" rotate="0" path="M 60 150 C 200 50, 440 50, 580 150" />
-            </g>
-          </svg>
+        <div className="hero-illustration">
+          <img
+            src={`${process.env.PUBLIC_URL}/CholoShobai.png`}
+            alt="CholoShobai, find people going your way and travel together"
+            className="hero-image"
+          />
         </div>
       </header>
 
