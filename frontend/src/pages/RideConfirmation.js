@@ -19,6 +19,7 @@ const RideConfirmation = () => {
   const [errorRide, setErrorRide] = useState(null);
   const [currentUserRideStatus, setCurrentUserRideStatus] = useState(null);
   const [userRatings, setUserRatings] = useState({});
+  const [expanded, setExpanded] = useState({});
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -137,9 +138,9 @@ const RideConfirmation = () => {
             if (!res.ok) return [uid, { average: 0, count: 0 }];
             const data = await res.json();
             const count = data.count ?? (data.ratings ? data.ratings.length : 0);
-            return [uid, { average: data.averageRating || 0, count }];
+            return [uid, { average: data.averageRating || 0, count, ratings: data.ratings || [] }];
           } catch (e) {
-            return [uid, { average: 0, count: 0 }];
+            return [uid, { average: 0, count: 0, ratings: [] }];
           }
         })
       );
@@ -160,6 +161,72 @@ const RideConfirmation = () => {
         <span className="rc-stars">{'★'.repeat(rounded)}{'☆'.repeat(5 - rounded)}</span>{' '}
         <span className="rc-rating-meta">{r.average.toFixed(1)} ({r.count})</span>
       </>
+    );
+  };
+
+  const toggleProfile = (uid) =>
+    setExpanded((prev) => ({ ...prev, [String(uid)]: !prev[String(uid)] }));
+
+  const renderFeedback = (uid) => {
+    const r = userRatings[String(uid)];
+    const withComments = (r?.ratings || []).filter((x) => x.comment && x.comment.trim());
+    if (withComments.length === 0) {
+      return <p className="rc-rating-meta">No written feedback yet.</p>;
+    }
+    return (
+      <ul className="feedback-list">
+        {withComments.map((x) => {
+          const rn = x.raterUserId?.fullname
+            ? `${x.raterUserId.fullname.firstname || ''} ${x.raterUserId.fullname.lastname || ''}`.trim()
+            : 'A user';
+          const rounded = Math.round(x.rating);
+          return (
+            <li className="feedback-item" key={x._id}>
+              <span className="rc-stars">{'★'.repeat(rounded)}{'☆'.repeat(5 - rounded)}</span>
+              <span className="feedback-text">{x.comment}</span>
+              <span className="rc-rating-meta">by {rn}</span>
+            </li>
+          );
+        })}
+      </ul>
+    );
+  };
+
+  const renderUserCard = (user, { ownerTag = false, status = null, actions = null } = {}) => {
+    const uid = user._id;
+    const name = `${user.fullname?.firstname || ''} ${user.fullname?.lastname || ''}`.trim() || 'Unknown';
+    const isExpanded = !!expanded[String(uid)];
+    return (
+      <div className="user-card2" key={uid}>
+        <div className="profile-head">
+          <span className="profile-name">
+            {ownerTag && <span className="owner-tag">Ride Owner</span>}
+            {name}
+          </span>
+          <button type="button" className="profile-toggle" onClick={() => toggleProfile(uid)}>
+            {isExpanded ? 'Hide profile' : 'View profile'}
+            <span className={`profile-chevron ${isExpanded ? 'up' : ''}`}>▾</span>
+          </button>
+        </div>
+        {isExpanded && (
+          <div className="profile-body">
+            <p><strong>Email:</strong> {user.email}</p>
+            {user.phone && <p><strong>Phone:</strong> {user.phone}</p>}
+            <p><strong>Rating:</strong> {renderRating(uid)}</p>
+            <div className="feedback-block">
+              <strong>Feedback:</strong>
+              {renderFeedback(uid)}
+            </div>
+            {status && (
+              <p>
+                <strong>Status:</strong>{' '}
+                <span className={`status-badge status-${status}`}>{status}</span>
+              </p>
+            )}
+            {actions}
+          </div>
+        )}
+      </div>
     );
   };
 
@@ -211,15 +278,7 @@ const RideConfirmation = () => {
 
       <h3>Posted By</h3>
       <div className="user-list">
-        <div className="user-card2">
-          <span className="owner-tag">Ride Owner</span>
-          <p><strong>Full Name:</strong> {rideDetails.user_id?.fullname?.firstname} {rideDetails.user_id?.fullname?.lastname}</p>
-          <p><strong>Email:</strong> {rideDetails.user_id?.email}</p>
-          {rideDetails.user_id?.phone && (
-            <p><strong>Phone:</strong> {rideDetails.user_id.phone}</p>
-          )}
-          <p><strong>Rating:</strong> {renderRating(rideDetails.user_id?._id || rideDetails.user_id)}</p>
-        </div>
+        {rideDetails.user_id && renderUserCard(rideDetails.user_id, { ownerTag: true })}
       </div>
 
       <h3>Joined Users</h3>
@@ -227,44 +286,28 @@ const RideConfirmation = () => {
         <div className="user-list">
           {joinedUsers.map((item) => {
             const user = item.user;
-            const userId = user._id;
-            const isItemOwner = String(userId) === String(ridePostedBy);
-
-            return (
-              <div className="user-card2" key={userId}>
-                {isItemOwner && <span className="owner-tag">Ride Owner</span>}
-                <p><strong>Full Name:</strong> {user.fullname?.firstname} {user.fullname?.lastname}</p>
-                <p><strong>Email:</strong> {user.email}</p>
-                {user.phone && (
-                  <p><strong>Phone:</strong> {user.phone}</p>
-                )}
-                <p><strong>Rating:</strong> {renderRating(userId)}</p>
-                {!isItemOwner && (
-                  <p>
-                    <strong>Status:</strong>{' '}
-                    <span className={`status-badge status-${item.status}`}>
-                      {item.status}
-                    </span>
-                  </p>
-                )}
-                {isOwner && !isItemOwner && (
-                  <div className="confirmation-buttons">
-                    <button
-                      className={`confirm-btn ${item.status === 'confirmed' ? 'active' : ''}`}
-                      onClick={() => handleAction(userId, 'confirmed')}
-                    >
-                      Confirm
-                    </button>
-                    <button
-                      className={`cancel-btn ${item.status === 'cancelled' ? 'active' : ''}`}
-                      onClick={() => handleAction(userId, 'cancelled')}
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                )}
+            const isItemOwner = String(user._id) === String(ridePostedBy);
+            const actions = (isOwner && !isItemOwner) ? (
+              <div className="confirmation-buttons">
+                <button
+                  className={`confirm-btn ${item.status === 'confirmed' ? 'active' : ''}`}
+                  onClick={() => handleAction(user._id, 'confirmed')}
+                >
+                  Confirm
+                </button>
+                <button
+                  className={`cancel-btn ${item.status === 'cancelled' ? 'active' : ''}`}
+                  onClick={() => handleAction(user._id, 'cancelled')}
+                >
+                  Cancel
+                </button>
               </div>
-            );
+            ) : null;
+            return renderUserCard(user, {
+              ownerTag: isItemOwner,
+              status: isItemOwner ? null : item.status,
+              actions,
+            });
           })}
         </div>
       ) : (

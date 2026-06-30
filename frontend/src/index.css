@@ -112,10 +112,11 @@ body {
 
 .sidebar-title {
   font-size: 1.5rem;
-  font-weight: bold;
+  font-weight: 700;
   margin: 0;
   color: white;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  letter-spacing: -0.01em;
   text-decoration: none;
 }
 
@@ -938,7 +939,7 @@ body, html {
 .landing {
   max-width: 1200px;
   margin: 0 auto;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   color: #0F172A;
 }
 
@@ -953,8 +954,10 @@ body, html {
   display: flex;
   align-items: center;
   gap: 10px;
+  font-family: 'Poppins', 'Segoe UI', sans-serif;
   font-size: 1.5rem;
   font-weight: 700;
+  letter-spacing: -0.01em;
   color: #0F172A;
 }
 
@@ -2156,6 +2159,84 @@ body, html, #root {
 .rc-rating-meta {
   color: #6B7280;
   font-size: 0.85rem;
+}
+
+/* Collapsible profile card on the ride confirmation page */
+.profile-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.profile-name {
+  font-weight: 600;
+  color: #0F172A;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.profile-toggle {
+  background: transparent;
+  border: 1px solid #CBD5E1;
+  color: #2563EB;
+  padding: 5px 12px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  transition: background-color 0.15s ease;
+}
+
+.profile-toggle:hover {
+  background: #F1F5F9;
+}
+
+.profile-chevron {
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+
+.profile-chevron.up {
+  transform: rotate(180deg);
+}
+
+.profile-body {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #F1F5F9;
+}
+
+.feedback-block {
+  margin-top: 6px;
+}
+
+.feedback-list {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.feedback-item {
+  background: #F8FAFC;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.9rem;
+}
+
+.feedback-text {
+  color: #334155;
 }
 
 .status-badge.status-open {
