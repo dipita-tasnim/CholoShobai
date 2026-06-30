@@ -2283,6 +2283,55 @@ body, html, #root {
   color: #334155;
 }
 
+/* Rating & Feedback section in My Rides */
+.rating-toggle-button {
+  margin-top: 1rem;
+  background-color: #2563EB;
+  color: #fff;
+  border: none;
+  padding: 0.55rem 1.3rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.rating-toggle-button:hover {
+  background-color: #1D4ED8;
+}
+
+.rating-section {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #E5E7EB;
+}
+
+.rating-section h4 {
+  margin: 0 0 12px;
+  font-size: 1rem;
+  color: #0F172A;
+}
+
+.rating-companion {
+  background: #F8FAFC;
+  border: 1px solid #E5E7EB;
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-bottom: 12px;
+}
+
+.rating-companion-name {
+  font-weight: 600;
+  color: #0F172A;
+  margin-bottom: 8px;
+}
+
+.rating-success {
+  color: #15803D;
+  font-size: 0.9rem;
+  margin: 4px 0 0;
+}
+
 .status-badge.status-open {
   background-color: #dcfce7; /* light green */
   color: #15803d;

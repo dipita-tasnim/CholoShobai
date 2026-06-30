@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
 import { API_BASE } from "../config";
+import RatingForm from "../components/RatingForm";
 
 const MyRides = () => {
   const [rides, setRides] = useState([]);
   const [error, setError] = useState(null);
   const [expandedRideIds, setExpandedRideIds] = useState([]);
+  const [ratingOpenIds, setRatingOpenIds] = useState([]);
+  const [ratedUsers, setRatedUsers] = useState({});
 
   useEffect(() => {
     const fetchRides = async () => {
@@ -67,6 +70,31 @@ const MyRides = () => {
     );
   };
 
+  const toggleRating = (rideId) => {
+    setRatingOpenIds((prev) =>
+      prev.includes(rideId)
+        ? prev.filter((id) => id !== rideId)
+        : [...prev, rideId]
+    );
+  };
+
+  const handleRate = async (ratedUserId, { rating, comment }) => {
+    const token = localStorage.getItem("token");
+    const res = await fetch(`${API_BASE}/api/ratings`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ ratedUserId, rating, comment }),
+    });
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      throw new Error(data.error || data.message || "Failed to submit rating");
+    }
+    setRatedUsers((prev) => ({ ...prev, [ratedUserId]: true }));
+  };
+
   return (
     <div className="my-rides">
       <h2>My Rides</h2>
@@ -75,6 +103,10 @@ const MyRides = () => {
 
       {rides.map((ride) => {
         const isExpanded = expandedRideIds.includes(ride._id);
+        const isRatingOpen = ratingOpenIds.includes(ride._id);
+        const confirmed = (ride.joinedUserIds || []).filter(
+          (j) => j.status === "confirmed" && j.user
+        );
 
         return (
           <div key={ride._id} className="ride-card">
@@ -117,6 +149,38 @@ const MyRides = () => {
                     Close
                   </button>
                 </div>
+
+                <button
+                  type="button"
+                  className="rating-toggle-button"
+                  onClick={() => toggleRating(ride._id)}
+                >
+                  {isRatingOpen ? "Hide Rating & Feedback" : "Rating & Feedback"}
+                </button>
+
+                {isRatingOpen && (
+                  <div className="rating-section">
+                    <h4>Rate your confirmed companions</h4>
+                    {confirmed.length === 0 ? (
+                      <p className="rc-rating-meta">No confirmed companions to rate yet.</p>
+                    ) : (
+                      confirmed.map((j) => {
+                        const comp = j.user;
+                        const name = `${comp.fullname?.firstname || ""} ${comp.fullname?.lastname || ""}`.trim() || comp.email;
+                        return (
+                          <div className="rating-companion" key={comp._id}>
+                            <div className="rating-companion-name">{name}</div>
+                            {ratedUsers[comp._id] ? (
+                              <p className="rating-success">Your rating has been submitted. Thank you.</p>
+                            ) : (
+                              <RatingForm onSubmitRating={(data) => handleRate(comp._id, data)} />
+                            )}
+                          </div>
+                        );
+                      })
+                    )}
+                  </div>
+                )}
               </div>
             )}
           </div>

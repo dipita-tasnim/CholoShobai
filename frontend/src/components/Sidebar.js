@@ -90,7 +90,6 @@ const Sidebar = () => {
             <Link to="/home" className="sidebar-link">Home</Link>
             <Link to="/profile" className="sidebar-link">Profile</Link>
             <Link to="/myrides" className="sidebar-link">My Rides</Link>
-            <Link to="/search-users" className="sidebar-link">Rating</Link>
             <Link to="/logout" className="sidebar-link">Logout</Link>
           </nav>
 
