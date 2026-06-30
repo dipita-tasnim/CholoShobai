@@ -8,6 +8,9 @@ const { sendOtpEmail, hasMailProvider } = require("../services/mail.service");
 const bcrypt = require("bcrypt");
 const mongoose = require('mongoose');
 
+// Only BRAC University email addresses (bracu.ac.bd and its subdomains) may sign up.
+const BRACU_EMAIL = /@([a-z0-9-]+\.)*bracu\.ac\.bd$/i;
+
 // Send a verification code to an email before registration.
 module.exports.sendOtp = async (req, res) => {
     try {
@@ -17,6 +20,11 @@ module.exports.sendOtp = async (req, res) => {
         }
 
         const email = (req.body.email || '').toLowerCase().trim();
+
+        // Restrict signup to BRAC University emails.
+        if (!BRACU_EMAIL.test(email)) {
+            return res.status(400).json({ message: "Only BRAC University email addresses (bracu.ac.bd) are allowed to sign up." });
+        }
 
         // Do not send a code to an email that is already registered.
         const existing = await userModel.findOne({ email });
@@ -70,6 +78,11 @@ module.exports.registerUser = async (req, res, next) => {
 
         const { firstname, lastname, password, otp, phone } = req.body;
         const email = (req.body.email || '').toLowerCase().trim();
+
+        // Restrict signup to BRAC University emails.
+        if (!BRACU_EMAIL.test(email)) {
+            return res.status(400).json({ message: "Only BRAC University email addresses (bracu.ac.bd) are allowed to sign up." });
+        }
 
         // Verify the email OTP before creating the account.
         const otpDoc = await Otp.findOne({ email });

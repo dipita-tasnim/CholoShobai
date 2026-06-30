@@ -29,6 +29,10 @@ const RegForm = () => {
             setError("First name must be at least 3 characters.");
             return;
         }
+        if (!/@([a-z0-9-]+\.)*bracu\.ac\.bd$/i.test(email.trim())) {
+            setError("Please sign up with your BRAC University email (ending in bracu.ac.bd).");
+            return;
+        }
         if (password.length < 6) {
             setError("Password must be at least 6 characters.");
             return;
