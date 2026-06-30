@@ -1042,32 +1042,49 @@ body, html {
 }
 
 .hero-illustration {
+  position: relative;
+  overflow: hidden;
   margin: 44px auto 0;
   max-width: 760px;
+  border-radius: 16px;
+  box-shadow: 0 26px 60px -22px rgba(0, 0, 0, 0.55);
 }
 
 .hero-image {
   width: 100%;
   height: auto;
   display: block;
-  border-radius: 16px;
-  box-shadow: 0 26px 60px -22px rgba(0, 0, 0, 0.55);
-  animation: hero-enter 0.9s ease both, hero-float 6s ease-in-out 0.9s infinite;
+  animation: hero-reveal 4s ease-in-out infinite;
 }
 
-@keyframes hero-enter {
-  from { opacity: 0; transform: translateY(26px) scale(0.97); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-@keyframes hero-float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+/* Reveal from the left to the right, the right stays blurred and hidden
+   until the reveal reaches it, then it loops and starts from the left again */
+@keyframes hero-reveal {
+  0% {
+    clip-path: inset(0 100% 0 0);
+    filter: blur(10px);
+    opacity: 0.35;
+  }
+  40% {
+    clip-path: inset(0 0 0 0);
+    filter: blur(0);
+    opacity: 1;
+  }
+  72% {
+    clip-path: inset(0 0 0 0);
+    filter: blur(0);
+    opacity: 1;
+  }
+  100% {
+    clip-path: inset(0 0 0 100%);
+    filter: blur(10px);
+    opacity: 0.35;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .hero-image {
-    animation: hero-enter 0.6s ease both;
+    animation: none;
   }
 }
 
