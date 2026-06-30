@@ -1041,6 +1041,17 @@ body, html {
   flex-wrap: wrap;
 }
 
+.hero-illustration {
+  margin: 38px auto 0;
+  max-width: 560px;
+}
+
+.hero-illustration svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
 .lp-btn-lg {
   padding: 0.85rem 1.8rem;
   font-size: 1rem;
