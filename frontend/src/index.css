@@ -1012,8 +1012,11 @@ body, html {
 
 /* Hero */
 .landing-hero {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
   background: linear-gradient(135deg, #0F172A 0%, #1E293B 55%, #1D4ED8 130%);
-  border-radius: 22px;
+  border-radius: 0;
   padding: 72px 28px;
   text-align: center;
   color: #fff;
@@ -1054,23 +1057,23 @@ body, html {
   width: 100%;
   height: auto;
   display: block;
-  animation: hero-reveal 4s ease-in-out infinite;
+  animation: hero-reveal 7s ease-in-out infinite;
 }
 
 /* Reveal from the left to the right, the right stays blurred and hidden
-   until the reveal reaches it, then it loops and starts from the left again */
+   until the reveal reaches it, then it holds (pause) and loops from the left */
 @keyframes hero-reveal {
   0% {
     clip-path: inset(0 100% 0 0);
     filter: blur(10px);
     opacity: 0.35;
   }
-  40% {
+  28% {
     clip-path: inset(0 0 0 0);
     filter: blur(0);
     opacity: 1;
   }
-  72% {
+  88% {
     clip-path: inset(0 0 0 0);
     filter: blur(0);
     opacity: 1;
@@ -1225,7 +1228,7 @@ body, html {
 }
 
 @media (max-width: 768px) {
-  .landing-hero { padding: 48px 20px; border-radius: 18px; }
+  .landing-hero { padding: 44px 18px; border-radius: 0; }
   .landing-hero h1 { font-size: 2rem; }
   .landing-hero p { font-size: 1.02rem; }
   .hero-actions .lp-btn-lg { width: 100%; }

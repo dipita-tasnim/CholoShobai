@@ -67,15 +67,15 @@ const LandingPage = () => {
             I already have an account
           </button>
         </div>
-
-        <div className="hero-illustration">
-          <img
-            src={`${process.env.PUBLIC_URL}/CholoShobai.png`}
-            alt="CholoShobai, find people going your way and travel together"
-            className="hero-image"
-          />
-        </div>
       </header>
+
+      <div className="hero-illustration">
+        <img
+          src={`${process.env.PUBLIC_URL}/CholoShobai.png`}
+          alt="CholoShobai, find people going your way and travel together"
+          className="hero-image"
+        />
+      </div>
 
       <section className="landing-section">
         <h2>What you can do</h2>
