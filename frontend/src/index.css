@@ -972,8 +972,13 @@ body, html {
 }
 
 .brand-logo {
-  height: 40px;
-  width: auto;
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+  background-color: #fff;
+  border: 1px solid #E5E7EB;
+  border-radius: 50%;
+  padding: 3px;
   flex-shrink: 0;
 }
 
@@ -1181,7 +1186,7 @@ body, html {
   /* Shrink the nav so the brand, Login and Sign Up all fit in one row */
   .landing-nav { gap: 8px; }
   .landing-brand { font-size: 1.15rem; gap: 8px; }
-  .brand-logo { height: 32px; }
+  .brand-logo { width: 36px; height: 36px; }
   .landing-nav-actions { gap: 6px; flex-shrink: 0; }
   .landing-nav .lp-btn { padding: 0.45rem 0.8rem; font-size: 0.85rem; }
 
@@ -2163,7 +2168,7 @@ body, html, #root {
 
   /* Extra shrink so the landing nav fits perfectly on small phones */
   .landing-brand { font-size: 1.05rem; gap: 6px; }
-  .brand-logo { height: 28px; }
+  .brand-logo { width: 32px; height: 32px; }
   .landing-nav-actions { gap: 5px; }
   .landing-nav .lp-btn { padding: 0.4rem 0.7rem; font-size: 0.8rem; }
 }
