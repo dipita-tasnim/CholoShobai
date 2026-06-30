@@ -2286,7 +2286,7 @@ body, html, #root {
 /* Rating & Feedback section in My Rides */
 .rating-toggle-button {
   margin-top: 1rem;
-  background-color: #2563EB;
+  background-color: #0F172A;
   color: #fff;
   border: none;
   padding: 0.55rem 1.3rem;
@@ -2297,7 +2297,7 @@ body, html, #root {
 }
 
 .rating-toggle-button:hover {
-  background-color: #1D4ED8;
+  background-color: #334155;
 }
 
 .rating-section {
