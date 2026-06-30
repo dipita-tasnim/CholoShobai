@@ -11,6 +11,9 @@ const MyProfile = () => {
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({ firstname: "", lastname: "", email: "", phone: "" });
+  const [ratings, setRatings] = useState([]);
+  const [averageRating, setAverageRating] = useState(0);
+  const [ratingCount, setRatingCount] = useState(0);
 
   const token = localStorage.getItem("token");
 
@@ -32,6 +35,25 @@ const MyProfile = () => {
     };
     fetchProfile();
   }, [token]);
+
+  useEffect(() => {
+    if (!user?._id) return;
+    const fetchRatings = async () => {
+      try {
+        const res = await fetch(`${API_BASE}/api/ratings/user/${user._id}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (!res.ok) return;
+        const data = await res.json();
+        setRatings(data.ratings || []);
+        setAverageRating(data.averageRating || 0);
+        setRatingCount(data.count ?? (data.ratings ? data.ratings.length : 0));
+      } catch (e) {
+        /* ignore rating fetch errors */
+      }
+    };
+    fetchRatings();
+  }, [user, token]);
 
   const startEdit = () => {
     setForm({
@@ -147,6 +169,44 @@ const MyProfile = () => {
                 </span>
               </div>
             </div>
+
+            <div className="profile-ratings">
+              <h3 className="profile-section-title">Ratings &amp; Feedback</h3>
+              {ratingCount > 0 ? (
+                <>
+                  <div className="profile-rating-summary">
+                    <span className="rc-stars">
+                      {'★'.repeat(Math.round(averageRating))}{'☆'.repeat(5 - Math.round(averageRating))}
+                    </span>
+                    <span className="rc-rating-meta">
+                      {averageRating.toFixed(1)} out of 5 ({ratingCount} review{ratingCount > 1 ? 's' : ''})
+                    </span>
+                  </div>
+                  {ratings.some((r) => r.comment && r.comment.trim()) ? (
+                    <ul className="feedback-list">
+                      {ratings.filter((r) => r.comment && r.comment.trim()).map((r) => {
+                        const rn = r.raterUserId?.fullname
+                          ? `${r.raterUserId.fullname.firstname || ''} ${r.raterUserId.fullname.lastname || ''}`.trim()
+                          : 'A user';
+                        const rounded = Math.round(r.rating);
+                        return (
+                          <li className="feedback-item" key={r._id}>
+                            <span className="rc-stars">{'★'.repeat(rounded)}{'☆'.repeat(5 - rounded)}</span>
+                            <span className="feedback-text">{r.comment}</span>
+                            <span className="rc-rating-meta">by {rn}</span>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  ) : (
+                    <p className="rc-rating-meta">No written feedback yet.</p>
+                  )}
+                </>
+              ) : (
+                <p className="rc-rating-meta">You have no ratings yet.</p>
+              )}
+            </div>
+
             <button className="profile-edit-btn" onClick={startEdit}>Edit Profile</button>
           </>
         ) : (

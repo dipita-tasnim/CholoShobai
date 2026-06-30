@@ -2435,3 +2435,27 @@ body, html, #root {
   margin-bottom: 16px;
   font-size: 0.9rem;
 }
+
+.profile-ratings {
+  margin-bottom: 22px;
+  padding-top: 18px;
+  border-top: 1px solid #F1F5F9;
+}
+
+.profile-section-title {
+  font-size: 1rem;
+  color: #0F172A;
+  margin: 0 0 12px;
+}
+
+.profile-rating-summary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.profile-rating-summary .rc-stars {
+  font-size: 1.2rem;
+}
