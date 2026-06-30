@@ -92,7 +92,7 @@ body {
 .sidebar-brand {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   text-decoration: none;
   margin-top: 0.5rem;
   margin-bottom: 1.5rem;
@@ -101,8 +101,8 @@ body {
 }
 
 .sidebar-logo {
-  width: 46px;
-  height: 46px;
+  width: 38px;
+  height: 38px;
   object-fit: contain;
   background-color: #fff;
   border-radius: 8px;
@@ -111,13 +111,14 @@ body {
 }
 
 .sidebar-title {
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 700;
   margin: 0;
   color: white;
   font-family: 'Sora', 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   letter-spacing: -0.02em;
   text-decoration: none;
+  white-space: nowrap;
 }
 
 
@@ -2103,12 +2104,12 @@ body, html, #root {
   }
   .content-area.with-sidebar {
     margin-left: 0;
-    padding: 4rem 1rem 1rem; /* room for the hamburger button */
+    padding: 4rem 0.75rem 1rem; /* room for the hamburger button */
   }
 
   /* Home and ride cards */
   .home-wrapper {
-    padding: 1rem;
+    padding: 0;
   }
   .ride-card {
     padding: 0.85rem;
