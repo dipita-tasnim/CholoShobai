@@ -11,6 +11,7 @@ import LoginForm from './components/LoginForm';
 import RegForm from './components/RegForm';
 import LandingPage from './pages/LandingPage';
 import MyProfile from './pages/MyProfile';
+import Notifications from './pages/Notifications';
 import AdminDashboard from './pages/AdminDashboard';
 import Logout from './components/Logout';
 import RideConfirmation from './pages/RideConfirmation';
@@ -43,6 +44,7 @@ function AppLayout() {
             <Route path="/create" element={<RideForm />} />
             <Route path="/myrides" element={<MyRides />} />
             <Route path="/profile" element={<MyProfile />} />
+            <Route path="/notifications" element={<Notifications />} />
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/logout" element={<Logout />} />
             <Route path="/ride-confirmation" element={<RideConfirmation />} />

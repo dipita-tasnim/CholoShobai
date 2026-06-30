@@ -14,41 +14,6 @@ const hasMailProvider = () => hasBrevo() || hasSmtp();
 const senderEmail = () =>
     process.env.BREVO_SENDER || process.env.SMTP_USER || 'no-reply@choloshobai.app';
 
-const otpSubject = 'Your CholoShobai verification code';
-const otpText = (otp) => `Your CholoShobai verification code is ${otp}. It expires in 10 minutes.`;
-const otpHtml = (otp) => `
-    <div style="font-family: Arial, sans-serif; max-width: 480px; margin: auto;">
-        <h2 style="color: #2563eb;">CholoShobai</h2>
-        <p>Use the verification code below to finish creating your account.</p>
-        <p style="font-size: 30px; font-weight: bold; letter-spacing: 6px; color: #1f2937;">${otp}</p>
-        <p style="color: #6b7280;">This code expires in 10 minutes. If you did not request it, you can safely ignore this email.</p>
-    </div>
-`;
-
-// Send through the Brevo HTTP API (port 443, not blocked by SMTP restrictions).
-const sendViaBrevo = async (to, otp) => {
-    const res = await fetch('https://api.brevo.com/v3/smtp/email', {
-        method: 'POST',
-        headers: {
-            'api-key': process.env.BREVO_API_KEY,
-            'Content-Type': 'application/json',
-            'accept': 'application/json'
-        },
-        body: JSON.stringify({
-            sender: { email: senderEmail(), name: 'CholoShobai' },
-            to: [{ email: to }],
-            subject: otpSubject,
-            htmlContent: otpHtml(otp),
-            textContent: otpText(otp)
-        })
-    });
-    if (!res.ok) {
-        const detail = await res.text().catch(() => '');
-        throw new Error(`Brevo API error ${res.status}: ${detail}`);
-    }
-    return { delivered: true };
-};
-
 let transporter = null;
 const getTransporter = () => {
     if (transporter) return transporter;
@@ -69,28 +34,82 @@ const getTransporter = () => {
     return transporter;
 };
 
-const sendViaSmtp = async (to, otp) => {
-    await getTransporter().sendMail({
-        from: process.env.SMTP_FROM || `CholoShobai <${process.env.SMTP_USER}>`,
-        to,
-        subject: otpSubject,
-        text: otpText(otp),
-        html: otpHtml(otp)
-    });
-    return { delivered: true };
-};
-
-// Sends the verification code. Prefers Brevo (HTTPS) when configured, then SMTP,
-// otherwise falls back to logging the code to the console for development.
-const sendOtpEmail = async (to, otp) => {
+// Core: send a single email via Brevo, then SMTP, otherwise log it (dev).
+const sendOne = async (to, subject, text, html) => {
     if (hasBrevo()) {
-        return await sendViaBrevo(to, otp);
+        const res = await fetch('https://api.brevo.com/v3/smtp/email', {
+            method: 'POST',
+            headers: {
+                'api-key': process.env.BREVO_API_KEY,
+                'Content-Type': 'application/json',
+                'accept': 'application/json'
+            },
+            body: JSON.stringify({
+                sender: { email: senderEmail(), name: 'CholoShobai' },
+                to: [{ email: to }],
+                subject,
+                htmlContent: html,
+                textContent: text
+            })
+        });
+        if (!res.ok) {
+            const detail = await res.text().catch(() => '');
+            throw new Error(`Brevo API error ${res.status}: ${detail}`);
+        }
+        return { delivered: true };
     }
     if (hasSmtp()) {
-        return await sendViaSmtp(to, otp);
+        await getTransporter().sendMail({
+            from: process.env.SMTP_FROM || `CholoShobai <${process.env.SMTP_USER}>`,
+            to,
+            subject,
+            text,
+            html
+        });
+        return { delivered: true };
     }
-    console.log(`\n[DEV OTP] Verification code for ${to}: ${otp}\n`);
+    console.log(`\n[DEV EMAIL] To: ${to}\nSubject: ${subject}\n${text}\n`);
     return { delivered: false };
 };
 
-module.exports = { sendOtpEmail, hasSmtp, hasBrevo, hasMailProvider };
+const otpHtml = (otp) => `
+    <div style="font-family: Arial, sans-serif; max-width: 480px; margin: auto;">
+        <h2 style="color: #2563eb;">CholoShobai</h2>
+        <p>Use the verification code below to finish creating your account.</p>
+        <p style="font-size: 30px; font-weight: bold; letter-spacing: 6px; color: #1f2937;">${otp}</p>
+        <p style="color: #6b7280;">This code expires in 10 minutes. If you did not request it, you can safely ignore this email.</p>
+    </div>
+`;
+
+// Sends the OTP verification code.
+const sendOtpEmail = async (to, otp) =>
+    sendOne(
+        to,
+        'Your CholoShobai verification code',
+        `Your CholoShobai verification code is ${otp}. It expires in 10 minutes.`,
+        otpHtml(otp)
+    );
+
+const announcementHtml = (title, message) => `
+    <div style="font-family: Arial, sans-serif; max-width: 520px; margin: auto;">
+        <h2 style="color: #0f172a;">CholoShobai</h2>
+        ${title ? `<h3 style="color: #1f2937; margin-bottom: 8px;">${title}</h3>` : ''}
+        <p style="color: #334155; line-height: 1.6; white-space: pre-wrap;">${message}</p>
+        <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 20px 0;" />
+        <p style="color: #9ca3af; font-size: 12px;">You are receiving this because you have a CholoShobai account.</p>
+    </div>
+`;
+
+// Sends an announcement to many recipients as individual emails so that
+// recipients do not see each other's addresses.
+const sendBroadcastEmail = async (recipients, title, message) => {
+    const subject = title ? `CholoShobai: ${title}` : 'CholoShobai announcement';
+    const html = announcementHtml(title, message);
+    const results = await Promise.allSettled(
+        recipients.map((to) => sendOne(to, subject, message, html))
+    );
+    const delivered = results.filter((r) => r.status === 'fulfilled' && r.value && r.value.delivered).length;
+    return { total: recipients.length, delivered };
+};
+
+module.exports = { sendOtpEmail, sendBroadcastEmail, hasSmtp, hasBrevo, hasMailProvider };

@@ -6,6 +6,7 @@ const app = express();
 const userRoutes = require('./routes/user.routes');
 const adminRoutes = require('./routes/admin.routes');
 const messageRoutes = require('./routes/messages');
+const notificationRoutes = require('./routes/notifications');
 
 app.use(cors());
 app.use(express.json());
@@ -18,5 +19,6 @@ app.get("/", (req, res) => {
 app.use('/users', userRoutes);
 app.use('/admin', adminRoutes);
 app.use('/api/messages', messageRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 module.exports = app;

@@ -31,4 +31,9 @@ router.delete('/ratings/:ratingId', adminController.deleteRating);
 // Audit log
 router.get('/audit', adminController.getAuditLogs);
 
+// Notifications (global announcements)
+router.post('/notifications', adminController.createNotification);
+router.get('/notifications', adminController.getNotifications);
+router.delete('/notifications/:id', adminController.deleteNotification);
+
 module.exports = router;

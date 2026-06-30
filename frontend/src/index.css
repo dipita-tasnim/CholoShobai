@@ -2332,6 +2332,66 @@ body, html, #root {
   margin: 4px 0 0;
 }
 
+/* Notifications page */
+.notif-page {
+  max-width: 720px;
+}
+
+.notif-empty {
+  color: #6B7280;
+}
+
+.notif-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 1rem;
+}
+
+.notif-card {
+  background: #fff;
+  border: 1px solid #E5E7EB;
+  border-left: 4px solid #2563EB;
+  border-radius: 10px;
+  padding: 16px 18px;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.05);
+}
+
+.notif-title {
+  margin: 0 0 6px;
+  font-size: 1.05rem;
+  color: #0F172A;
+}
+
+.notif-message {
+  margin: 0 0 10px;
+  color: #334155;
+  line-height: 1.55;
+  white-space: pre-wrap;
+}
+
+.notif-meta {
+  color: #9CA3AF;
+  font-size: 0.8rem;
+}
+
+/* Unread badge on the sidebar Notifications link */
+.notif-badge {
+  display: inline-block;
+  min-width: 18px;
+  height: 18px;
+  line-height: 18px;
+  text-align: center;
+  background: #EF4444;
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 0 5px;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
 .status-badge.status-open {
   background-color: #dcfce7; /* light green */
   color: #15803d;

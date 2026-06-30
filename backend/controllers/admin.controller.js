@@ -3,6 +3,8 @@ const Rating = require('../models/ratingModel');
 const Ride = require('../models/rideModel');
 const Message = require('../models/Message');
 const AuditLog = require('../models/auditLog.model');
+const Notification = require('../models/notification.model');
+const { sendBroadcastEmail } = require('../services/mail.service');
 const mongoose = require('mongoose');
 
 // Record an administrative action. Failures here must never break the main action.
@@ -420,5 +422,70 @@ exports.getAuditLogs = async (req, res) => {
         res.status(200).json(logs);
     } catch (error) {
         res.status(500).json({ message: "Failed to fetch audit logs", error: error.message });
+    }
+};
+
+// Send a global announcement to all users (in-app, optionally by email too)
+exports.createNotification = async (req, res) => {
+    try {
+        const { title, message, sendEmail } = req.body;
+        if (!message || !message.trim()) {
+            return res.status(400).json({ message: "Message is required" });
+        }
+
+        const notification = await Notification.create({
+            title: title ? title.trim() : undefined,
+            message: message.trim(),
+            createdBy: req.user._id,
+            createdByName: req.user.fullname
+                ? `${req.user.fullname.firstname} ${req.user.fullname.lastname || ''}`.trim()
+                : undefined
+        });
+
+        await logAction(req, 'Sent notification', 'user', notification._id, (title || message).slice(0, 60));
+
+        let emailResult = null;
+        if (sendEmail) {
+            const users = await userModel.find({ status: { $ne: 'banned' } }).select('email');
+            const recipients = users.map((u) => u.email).filter(Boolean);
+            try {
+                emailResult = await sendBroadcastEmail(recipients, title, message.trim());
+            } catch (err) {
+                console.error('Broadcast email error:', err.message);
+                emailResult = { error: err.message };
+            }
+        }
+
+        res.status(201).json({ notification, emailResult });
+    } catch (error) {
+        res.status(500).json({ message: "Failed to send notification", error: error.message });
+    }
+};
+
+// All notifications (for admin management)
+exports.getNotifications = async (req, res) => {
+    try {
+        const notifications = await Notification.find().sort({ createdAt: -1 });
+        res.status(200).json(notifications);
+    } catch (error) {
+        res.status(500).json({ message: "Failed to fetch notifications", error: error.message });
+    }
+};
+
+// Delete a notification
+exports.deleteNotification = async (req, res) => {
+    try {
+        const { id } = req.params;
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ message: "Invalid notification ID" });
+        }
+        const notification = await Notification.findByIdAndDelete(id);
+        if (!notification) {
+            return res.status(404).json({ message: "Notification not found" });
+        }
+        await logAction(req, 'Deleted notification', 'user', id, (notification.title || notification.message).slice(0, 60));
+        res.status(200).json({ message: "Notification deleted" });
+    } catch (error) {
+        res.status(500).json({ message: "Failed to delete notification", error: error.message });
     }
 };

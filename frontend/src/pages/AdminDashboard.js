@@ -100,6 +100,12 @@ const AdminDashboard = () => {
   const [rides, setRides] = useState([]);
   const [ratings, setRatings] = useState([]);
   const [logs, setLogs] = useState([]);
+  const [notifications, setNotifications] = useState([]);
+  const [notifTitle, setNotifTitle] = useState('');
+  const [notifMessage, setNotifMessage] = useState('');
+  const [notifEmail, setNotifEmail] = useState(false);
+  const [sendingNotif, setSendingNotif] = useState(false);
+  const [notifResult, setNotifResult] = useState(null);
 
   // search / filter / page state
   const [userSearch, setUserSearch] = useState('');
@@ -122,16 +128,18 @@ const AdminDashboard = () => {
         setLoading(true);
         const statsData = await fetchJson('/admin/stats');
         setStats(statsData);
-        const [u, r, rd, lg] = await Promise.all([
+        const [u, r, rd, lg, nt] = await Promise.all([
           fetchJson('/admin/users'),
           fetchJson('/admin/ratings'),
           fetchJson('/admin/rides'),
           fetchJson('/admin/audit'),
+          fetchJson('/admin/notifications'),
         ]);
         setUsers(u || []);
         setRatings(r || []);
         setRides(rd || []);
         setLogs(lg || []);
+        setNotifications(nt || []);
       } catch (e) {
         if (e.status === 403) setIsAdmin(false);
         else setError(e.message);
@@ -208,6 +216,43 @@ const AdminDashboard = () => {
     } catch (e) { setError(e.message); }
   };
 
+  const sendNotification = async (e) => {
+    e.preventDefault();
+    if (!notifMessage.trim()) return;
+    setSendingNotif(true);
+    setNotifResult(null);
+    try {
+      const res = await fetchJson('/admin/notifications', {
+        method: 'POST',
+        body: JSON.stringify({ title: notifTitle.trim(), message: notifMessage.trim(), sendEmail: notifEmail }),
+      });
+      setNotifications((prev) => [res.notification, ...prev]);
+      setNotifTitle('');
+      setNotifMessage('');
+      let msg = 'Notification sent to all users.';
+      if (notifEmail && res.emailResult) {
+        if (res.emailResult.error) msg += ` Email failed: ${res.emailResult.error}`;
+        else msg += ` Email delivered to ${res.emailResult.delivered} of ${res.emailResult.total}.`;
+      }
+      setNotifResult(msg);
+      setNotifEmail(false);
+      refreshLogs();
+    } catch (err) {
+      setNotifResult(err.message || 'Failed to send notification.');
+    } finally {
+      setSendingNotif(false);
+    }
+  };
+
+  const deleteNotificationItem = async (n) => {
+    if (!window.confirm('Delete this notification?')) return;
+    try {
+      await fetchJson(`/admin/notifications/${n._id}`, { method: 'DELETE' });
+      setNotifications((prev) => prev.filter((x) => x._id !== n._id));
+      refreshLogs();
+    } catch (e) { setError(e.message); }
+  };
+
   const viewUser = async (user) => {
     setDetailLoading(true);
     setSelectedUser({ loading: true, base: user });
@@ -266,6 +311,7 @@ const AdminDashboard = () => {
     ['users', 'Users'],
     ['rides', 'Rides'],
     ['ratings', 'Ratings'],
+    ['notifications', 'Notifications'],
     ['audit', 'Audit Log'],
   ];
 
@@ -538,6 +584,64 @@ const AdminDashboard = () => {
               </table>
             </div>
             <Pagination page={lPage} total={filteredLogs.length} onPage={setLogPage} />
+          </div>
+        </>
+      )}
+
+      {/* NOTIFICATIONS */}
+      {activeTab === 'notifications' && (
+        <>
+          <div className="ac-table-card" style={{ padding: '20px', marginBottom: '16px' }}>
+            <h3 style={{ marginTop: 0, marginBottom: '14px' }}>Send a global notification</h3>
+            <form onSubmit={sendNotification}>
+              <input
+                className="ac-search"
+                style={{ marginBottom: '10px', width: '100%' }}
+                placeholder="Title (optional)"
+                value={notifTitle}
+                onChange={(e) => setNotifTitle(e.target.value)}
+              />
+              <textarea
+                className="ac-search"
+                style={{ width: '100%', minHeight: '100px', marginBottom: '10px', resize: 'vertical', fontFamily: 'inherit' }}
+                placeholder="Write your announcement to all users..."
+                value={notifMessage}
+                onChange={(e) => setNotifMessage(e.target.value)}
+                required
+              />
+              <label style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px', fontSize: '14px', color: '#374151' }}>
+                <input type="checkbox" checked={notifEmail} onChange={(e) => setNotifEmail(e.target.checked)} />
+                Also send by email to all users
+              </label>
+              <button type="submit" className="ac-btn ac-btn-primary" disabled={sendingNotif || !notifMessage.trim()}>
+                {sendingNotif ? 'Sending...' : 'Send to all users'}
+              </button>
+              {notifResult && <p style={{ marginTop: '12px', color: '#15803d', fontSize: '14px' }}>{notifResult}</p>}
+            </form>
+          </div>
+
+          <div className="ac-table-card">
+            <div className="ac-table-scroll">
+              <table className="ac-table">
+                <thead>
+                  <tr><th>Title</th><th>Message</th><th>Sent By</th><th>When</th><th>Actions</th></tr>
+                </thead>
+                <tbody>
+                  {notifications.length === 0 && (
+                    <tr><td colSpan="5"><div className="ac-empty">No notifications sent yet.</div></td></tr>
+                  )}
+                  {notifications.map((n) => (
+                    <tr key={n._id}>
+                      <td className="ac-strong">{n.title || '—'}</td>
+                      <td>{n.message}</td>
+                      <td className="ac-muted-text">{n.createdByName || '—'}</td>
+                      <td className="ac-muted-text">{fmtDateTime(n.createdAt)}</td>
+                      <td><button className="ac-btn ac-btn-danger" onClick={() => deleteNotificationItem(n)}>Delete</button></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </>
       )}
