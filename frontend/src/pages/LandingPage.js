@@ -38,34 +38,38 @@ const LandingPage = () => {
 
   return (
     <div className="landing">
-      <nav className="landing-nav">
-        <div className="landing-brand">
-          <img
-            src={`${process.env.PUBLIC_URL}/logo1.png`}
-            alt="CholoShobai"
-            className="brand-logo"
-          />
-          <span>CholoShobai</span>
-        </div>
-        <div className="landing-nav-actions">
-          <button className="lp-btn lp-btn-ghost" onClick={() => navigate('/login')}>Login</button>
-          <button className="lp-btn lp-btn-primary" onClick={() => navigate('/registration')}>Sign Up</button>
-        </div>
-      </nav>
-
       <header className="landing-hero">
-        <h1>Find companion going your way</h1>
-        <p>
-          CholoShobai helps you to find each other heading the same direction, so you can travel
-          together, cheaper and safer. 
-        </p>
-        <div className="hero-actions">
-          <button className="lp-btn lp-btn-lg lp-btn-white" onClick={() => navigate('/registration')}>
-            Get Started
-          </button>
-          <button className="lp-btn lp-btn-lg lp-btn-outline-white" onClick={() => navigate('/login')}>
-            I already have an account
-          </button>
+        <div className="landing-hero-inner">
+          <nav className="landing-nav">
+            <div className="landing-brand">
+              <img
+                src={`${process.env.PUBLIC_URL}/logo1.png`}
+                alt="CholoShobai"
+                className="brand-logo"
+              />
+              <span>CholoShobai</span>
+            </div>
+            <div className="landing-nav-actions">
+              <button className="lp-btn lp-btn-outline-white" onClick={() => navigate('/login')}>Login</button>
+              <button className="lp-btn lp-btn-white" onClick={() => navigate('/registration')}>Sign Up</button>
+            </div>
+          </nav>
+
+          <div className="landing-hero-content">
+            <h1>Find companion going your way</h1>
+            <p>
+              CholoShobai helps you to find each other heading the same direction, so you can travel
+              together, cheaper and safer.
+            </p>
+            <div className="hero-actions">
+              <button className="lp-btn lp-btn-lg lp-btn-white" onClick={() => navigate('/registration')}>
+                Get Started
+              </button>
+              <button className="lp-btn lp-btn-lg lp-btn-outline-white" onClick={() => navigate('/login')}>
+                I already have an account
+              </button>
+            </div>
+          </div>
         </div>
       </header>
 
