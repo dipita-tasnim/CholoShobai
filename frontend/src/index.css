@@ -1241,29 +1241,27 @@ body, html {
   .landing-hero-inner { padding: 12px 16px 22px; }
   .landing-nav { margin-bottom: 28px; }
   .landing-hero h1 {
-    font-size: clamp(0.85rem, 4.4vw, 1.45rem);
+    font-size: clamp(1rem, 4.7vw, 1.6rem);
     white-space: nowrap;
     margin-bottom: 12px;
   }
-  .landing-hero p { font-size: 0.92rem; margin-bottom: 20px; }
+  .landing-hero p { font-size: 0.82rem; margin-bottom: 18px; }
   .hero-actions { gap: 10px; }
-  .hero-actions .lp-btn-lg { width: 100%; padding: 0.7rem 1.4rem; }
+  .hero-actions .lp-btn-lg {
+    width: auto;
+    padding: 0.5rem 1.15rem;
+    font-size: 0.85rem;
+  }
 
-  /* Image becomes the bigger, full-width element on mobile, and a bit taller */
+  /* Full-width image on mobile, whole image shown (no cropping) */
   .hero-illustration {
     width: 100vw;
     max-width: none;
-    height: 240px;
     margin-top: 18px;
     margin-bottom: 0;
     margin-left: calc(50% - 50vw);
     margin-right: calc(50% - 50vw);
     border-radius: 0;
-  }
-  .hero-image {
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
   }
 
   /* Shrink the nav so the brand, Login and Sign Up all fit in one row */
