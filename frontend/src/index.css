@@ -2375,21 +2375,126 @@ body, html, #root {
   font-size: 0.8rem;
 }
 
-/* Unread badge on the sidebar Notifications link */
-.notif-badge {
-  display: inline-block;
+/* Notification bell (top right) */
+.notif-bell-wrap {
+  position: fixed;
+  top: 14px;
+  right: 18px;
+  z-index: 900;
+}
+
+.notif-bell-btn {
+  position: relative;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid #E2E8F0;
+  background: #fff;
+  color: #0F172A;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+  transition: background-color 0.15s ease;
+}
+
+.notif-bell-btn:hover {
+  background: #F1F5F9;
+}
+
+.notif-bell-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
   min-width: 18px;
   height: 18px;
   line-height: 18px;
-  text-align: center;
+  padding: 0 5px;
   background: #EF4444;
   color: #fff;
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   font-weight: 700;
   border-radius: 999px;
-  padding: 0 5px;
-  margin-left: 8px;
-  vertical-align: middle;
+  text-align: center;
+  border: 2px solid #fff;
+  box-sizing: border-box;
+}
+
+.notif-dropdown {
+  position: absolute;
+  top: 52px;
+  right: 0;
+  width: 320px;
+  max-width: 86vw;
+  background: #fff;
+  border: 1px solid #E5E7EB;
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.16);
+  overflow: hidden;
+}
+
+.notif-dropdown-head {
+  padding: 12px 16px;
+  font-weight: 700;
+  color: #0F172A;
+  border-bottom: 1px solid #F1F5F9;
+}
+
+.notif-dropdown-list {
+  max-height: 360px;
+  overflow-y: auto;
+}
+
+.notif-dropdown-empty {
+  padding: 22px 16px;
+  text-align: center;
+  color: #6B7280;
+  font-size: 0.9rem;
+}
+
+.notif-dropdown-item {
+  padding: 12px 16px;
+  border-bottom: 1px solid #F1F5F9;
+}
+
+.notif-dropdown-item:last-child {
+  border-bottom: none;
+}
+
+.notif-dropdown-title {
+  font-weight: 600;
+  color: #0F172A;
+  font-size: 0.92rem;
+  margin-bottom: 2px;
+}
+
+.notif-dropdown-msg {
+  color: #334155;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  white-space: pre-wrap;
+}
+
+.notif-dropdown-meta {
+  color: #9CA3AF;
+  font-size: 0.75rem;
+  margin-top: 4px;
+}
+
+.notif-dropdown-all {
+  display: block;
+  text-align: center;
+  padding: 11px;
+  color: #2563EB;
+  font-weight: 600;
+  font-size: 0.88rem;
+  text-decoration: none;
+  border-top: 1px solid #F1F5F9;
+}
+
+.notif-dropdown-all:hover {
+  background: #F8FAFC;
 }
 
 .status-badge.status-open {

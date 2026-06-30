@@ -5,6 +5,7 @@ import { ChatProvider } from './contexts/ChatContext';
 // Pages & Components
 import Home from './pages/Home';
 import Sidebar from './components/Sidebar';
+import NotificationBell from './components/NotificationBell';
 import RideForm from './components/RideForm';
 import MyRides from './pages/MyRides';
 import LoginForm from './components/LoginForm';
@@ -27,6 +28,7 @@ function AppLayout() {
   return (
     <div className="main-container">
       {!shouldHideSidebar && <Sidebar />}
+      {!shouldHideSidebar && <NotificationBell />}
       <div className={`content-area ${!shouldHideSidebar ? 'with-sidebar' : ''}`}>
         <div className="pages">
           <Routes>

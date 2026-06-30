@@ -9,7 +9,6 @@ const Sidebar = () => {
   const [error, setError] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
     
@@ -50,27 +49,8 @@ const Sidebar = () => {
       }
     };
 
-    const fetchNotifications = async () => {
-      const token = localStorage.getItem('token');
-      if (!token) return;
-      try {
-        const res = await fetch(`${API_BASE}/api/notifications`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        if (!res.ok) return;
-        const data = await res.json();
-        const seenAt = localStorage.getItem('notifications_seen_at');
-        const seenTime = seenAt ? new Date(seenAt).getTime() : 0;
-        const unread = data.filter((n) => new Date(n.createdAt).getTime() > seenTime).length;
-        setUnreadCount(unread);
-      } catch (err) {
-        /* ignore notification errors */
-      }
-    };
-
     checkAdminStatus();
     fetchProfile();
-    fetchNotifications();
 
     }, []);
   const closeSidebar = () => setIsOpen(false);
@@ -110,10 +90,6 @@ const Sidebar = () => {
             <Link to="/home" className="sidebar-link">Home</Link>
             <Link to="/profile" className="sidebar-link">Profile</Link>
             <Link to="/myrides" className="sidebar-link">My Rides</Link>
-            <Link to="/notifications" className="sidebar-link" onClick={() => setUnreadCount(0)}>
-              Notifications
-              {unreadCount > 0 && <span className="notif-badge">{unreadCount}</span>}
-            </Link>
             <Link to="/logout" className="sidebar-link">Logout</Link>
           </nav>
 
