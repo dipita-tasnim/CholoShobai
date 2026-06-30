@@ -1166,8 +1166,29 @@ body, html {
   .landing-hero { padding: 48px 20px; border-radius: 18px; }
   .landing-hero h1 { font-size: 2rem; }
   .landing-hero p { font-size: 1.02rem; }
-  .feature-grid { grid-template-columns: 1fr; }
   .hero-actions .lp-btn-lg { width: 100%; }
+
+  /* Keep the three feature cards in one horizontal row on mobile */
+  .feature-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+  }
+  .feature-card {
+    padding: 14px 10px;
+    text-align: center;
+  }
+  .feature-icon {
+    width: 38px;
+    height: 38px;
+    margin: 0 auto 10px;
+  }
+  .feature-card h3 {
+    font-size: 0.9rem;
+  }
+  .feature-card p {
+    font-size: 0.78rem;
+    line-height: 1.4;
+  }
 }
 
 
