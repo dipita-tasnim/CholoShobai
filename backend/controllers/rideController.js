@@ -75,7 +75,9 @@ const getRide = async (req, res) => {
     const responseData = {
       ...ride.toObject(),
       user_id: ride.user_id,
-      joinedUserIds: ride.joinedUserIds || []
+      // Entries whose account was deleted populate to null, so drop them
+      // rather than handing clients a participant that does not exist.
+      joinedUserIds: (ride.joinedUserIds || []).filter((entry) => entry.user)
     };
   
     res.status(200).json(responseData);
@@ -278,7 +280,7 @@ const updateJoinedUserStatus = async (req, res) => {
     }
 
     const joinedUser = ride.joinedUserIds.find(entry =>
-      entry.user.toString() === userId
+      entry.user && entry.user.toString() === userId
     );
 
     if (!joinedUser) {
@@ -290,7 +292,10 @@ const updateJoinedUserStatus = async (req, res) => {
 
     const populatedRide = await ride.populate('joinedUserIds.user', 'fullname.firstname fullname.lastname email');
 
-    res.status(200).json(populatedRide);
+    res.status(200).json({
+      ...populatedRide.toObject(),
+      joinedUserIds: (populatedRide.joinedUserIds || []).filter((entry) => entry.user)
+    });
   } catch (error) {
     res.status(500).json({ error: 'Failed to update joined user status' });
   }

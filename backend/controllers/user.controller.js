@@ -4,6 +4,7 @@ const userService = require("../services/user.service");
 const { validationResult } = require("express-validator");
 const blackListTokenModel = require("../models/blacklistToken.model");
 const Otp = require("../models/otp.model");
+const Notification = require("../models/notification.model");
 const { sendOtpEmail, hasMailProvider } = require("../services/mail.service");
 const bcrypt = require("bcrypt");
 const mongoose = require('mongoose');
@@ -113,6 +114,21 @@ module.exports.registerUser = async (req, res, next) => {
             password: hashedPassword,
             phone
         });
+
+        // Let the admins know a new account showed up. This is best effort:
+        // a failure here must never block the signup itself.
+        try {
+            const newUserName = `${user.fullname.firstname} ${user.fullname.lastname || ''}`.trim();
+            await Notification.create({
+                title: 'New account created',
+                message: `${newUserName} (${user.email}) just created an account.`,
+                audience: 'admin',
+                type: 'new_user',
+                createdByName: 'System'
+            });
+        } catch (notifyErr) {
+            console.error('Failed to create new-user notification:', notifyErr.message);
+        }
 
         // Create token
         const token = user.generateAuthToken();
@@ -306,6 +322,13 @@ exports.deleteUser = async (req, res) => {
 
     // ALSO delete all rides created by this user
     await Ride.deleteMany({ user_id: id });
+
+    // ...and remove them from rides they had joined, so those rides are not
+    // left pointing at a user that no longer exists.
+    await Ride.updateMany(
+        { 'joinedUserIds.user': id },
+        { $pull: { joinedUserIds: { user: id } } }
+    );
 
     res.status(200).json({ message: "User and their rides deleted successfully" });
 };

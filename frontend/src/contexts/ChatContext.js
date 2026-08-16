@@ -1,6 +1,7 @@
 import React, { createContext, useState, useContext, useEffect, useRef, useCallback } from 'react';
 import io from 'socket.io-client';
 import { useAuth } from './AuthContext'; // Assuming you have an AuthContext
+import { API_BASE, SOCKET_URL } from '../config';
 
 const ChatContext = createContext();
 
@@ -22,14 +23,13 @@ export const ChatProvider = ({ children }) => {
     // Move fetchMessages outside the useEffect to make it reusable
     const fetchMessages = useCallback(async (rideId) => {
         try {
-            const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:4000';
             console.log('Fetching messages for ride:', {
                 rideId,
                 currentUser: user?.email,
                 userId: user?._id
             });
 
-            const response = await fetch(`${backendUrl}/api/messages/${rideId}`, {
+            const response = await fetch(`${API_BASE}/api/messages/${rideId}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                 },
@@ -111,18 +111,19 @@ export const ChatProvider = ({ children }) => {
             setMessages([]);
         }
 
-        const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:4000';
         console.log('Creating new socket connection:', {
             userId: user._id,
             email: user.email,
-            backendUrl
+            backendUrl: SOCKET_URL
         });
 
-        const newSocket = io(backendUrl, {
+        const newSocket = io(SOCKET_URL, {
             auth: {
                 token: token
             },
-            transports: ['websocket'],
+            // Keep the polling fallback: a websocket-only client silently fails
+            // wherever the upgrade is blocked (some networks, proxies, browsers).
+            transports: ['websocket', 'polling'],
             reconnection: true,
             reconnectionAttempts: MAX_RECONNECT_ATTEMPTS,
             reconnectionDelay: 1000,

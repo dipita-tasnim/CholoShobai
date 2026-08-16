@@ -232,6 +232,13 @@ exports.deleteUser = async (req, res) => {
         await Rating.deleteMany({ raterUserId: userId }, { session });
         await Rating.deleteMany({ ratedUserId: userId }, { session });
         await Ride.deleteMany({ user_id: userId }, { session });
+        // Also drop them from rides they joined, otherwise those rides keep a
+        // reference to a user that no longer exists.
+        await Ride.updateMany(
+            { 'joinedUserIds.user': userId },
+            { $pull: { joinedUserIds: { user: userId } } },
+            { session }
+        );
         await userModel.findByIdAndDelete(userId, { session });
 
         await session.commitTransaction();
@@ -462,10 +469,13 @@ exports.createNotification = async (req, res) => {
     }
 };
 
-// All notifications (for admin management)
+// Announcements sent by admins (for admin management). System alerts such as
+// new signups are excluded here: they belong in the notification bell, not in
+// the list of announcements an admin has broadcast.
 exports.getNotifications = async (req, res) => {
     try {
-        const notifications = await Notification.find().sort({ createdAt: -1 });
+        const notifications = await Notification.find({ audience: { $ne: 'admin' } })
+            .sort({ createdAt: -1 });
         res.status(200).json(notifications);
     } catch (error) {
         res.status(500).json({ message: "Failed to fetch notifications", error: error.message });

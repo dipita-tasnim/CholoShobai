@@ -1,11 +1,24 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-// A global announcement broadcast by an admin to all users.
+// An announcement broadcast by an admin, or a system alert raised for admins.
 const notificationSchema = new Schema({
     title: {
         type: String,
         trim: true
+    },
+    // 'all' is seen by everyone, 'admin' only by admin accounts.
+    audience: {
+        type: String,
+        enum: ['all', 'admin'],
+        default: 'all',
+        index: true
+    },
+    // Where the notification came from, used for the label in the bell.
+    type: {
+        type: String,
+        enum: ['announcement', 'new_user'],
+        default: 'announcement'
     },
     message: {
         type: String,

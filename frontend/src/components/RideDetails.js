@@ -1,34 +1,37 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { API_BASE } from "../config";
+import { getCurrentUserId, getToken } from "../utils/auth";
 
 const RideDetails = ({ ride }) => {
   const isOpen = ride.status === "open";
   const navigate = useNavigate();
   const [isJoined, setIsJoined] = useState(false);
 
+  const currentUserId = useMemo(() => getCurrentUserId(), []);
+  const ownerId = ride.user_id?._id || ride.user_id;
+  // The owner cannot connect to their own ride.
+  const isOwner = !!currentUserId && String(ownerId) === String(currentUserId);
+
+  const posterName = ride.user_id?.fullname?.firstname || "Unknown";
+  const posterInitial = posterName.charAt(0).toUpperCase();
+
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
+    const userId = getCurrentUserId();
+    if (!userId) {
       setIsJoined(false);
       return;
     }
-    
-    try {
-      const user = JSON.parse(atob(token.split(".")[1]));
-      // Check if user is in joinedUserIds array by comparing user IDs
-      const isUserJoined = ride.joinedUserIds?.some(
-        (entry) => entry.user._id === user._id || entry.user === user._id
-      );
-      setIsJoined(isUserJoined);
-    } catch (error) {
-      console.error("Error checking join status:", error);
-      setIsJoined(false);
-    }
+
+    // Check if user is in joinedUserIds array by comparing user IDs
+    const isUserJoined = ride.joinedUserIds?.some(
+      (entry) => entry.user?._id === userId || entry.user === userId
+    );
+    setIsJoined(!!isUserJoined);
   }, [ride.joinedUserIds]);
 
   const toggleJoin = async () => {
-    const token = localStorage.getItem("token");
+    const token = getToken();
     if (!token) return;
     
     try {
@@ -59,6 +62,12 @@ const RideDetails = ({ ride }) => {
 
   return (
     <div className="ride-card">
+      <div className="ride-poster">
+        <span className="ride-poster-avatar" aria-hidden="true">{posterInitial}</span>
+        <span className="ride-poster-name">{posterName}</span>
+        {isOwner && <span className="ride-poster-you">Your post</span>}
+      </div>
+
       <div className="ride-from-to-wrapper">
         <div className="ride-from">
           <strong>{ride.startingPoint}</strong>
@@ -102,14 +111,16 @@ const RideDetails = ({ ride }) => {
           See Who's Going
         </button>
 
-        <button
-          type="button"
-          className={`btn-connect ${isJoined ? "connected" : ""}`}
-          disabled={!isOpen}
-          onClick={toggleJoin}
-        >
-          {!isOpen ? "Closed" : isJoined ? "Connected" : "Connect"}
-        </button>
+        {!isOwner && (
+          <button
+            type="button"
+            className={`btn-connect ${isJoined ? "connected" : ""}`}
+            disabled={!isOpen}
+            onClick={toggleJoin}
+          >
+            {!isOpen ? "Closed" : isJoined ? "Connected" : "Connect"}
+          </button>
+        )}
       </div>
     </div>
   );

@@ -3,6 +3,7 @@ import { useChat } from '../contexts/ChatContext';
 import ChatWindow from '../components/chat/ChatWindow';
 import '../components/chat/Chat.css';
 import { useAuth } from '../contexts/AuthContext'; // Assuming you have an AuthContext
+import { API_BASE } from '../config';
 
 const ChatPage = () => {
     const { activeRideId, setActiveRideId } = useChat();
@@ -23,7 +24,7 @@ const ChatPage = () => {
                 setLoadingRides(true);
                 setErrorRides(null);
                 // /api/rides/mychats returns rides where the user is the owner OR a confirmed participant
-                const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || 'http://localhost:4000'}/api/rides/mychats`, {
+                const response = await fetch(`${API_BASE}/api/rides/mychats`, {
                     headers: {
                         'Authorization': `Bearer ${token}`,
                     },

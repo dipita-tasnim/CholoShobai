@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useChat } from '../contexts/ChatContext';
 import ChatWindow from '../components/chat/ChatWindow';
 import '../components/chat/Chat.css';
 import { API_BASE } from "../config";
+import { getCurrentUserId, getToken } from "../utils/auth";
 
 const RideConfirmation = () => {
   const location = useLocation();
@@ -12,7 +13,9 @@ const RideConfirmation = () => {
 
   const [joinedUsers, setJoinedUsers] = useState([]);
   const [error, setError] = useState(null);
-  const [currentUserId, setCurrentUserId] = useState(null);
+  // Read straight from the token: the riders list must render even if the
+  // token cannot be decoded, it only decides which actions are offered.
+  const currentUserId = useMemo(() => getCurrentUserId(), []);
   const [ridePostedBy, setRidePostedBy] = useState(null);
   const [rideDetails, setRideDetails] = useState(null);
   const [loadingRide, setLoadingRide] = useState(true);
@@ -22,18 +25,9 @@ const RideConfirmation = () => {
   const [expanded, setExpanded] = useState({});
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = getToken();
     if (!token) {
       setError("Not logged in");
-      setLoadingRide(false);
-      return;
-    }
-
-    try {
-      const decoded = JSON.parse(atob(token.split(".")[1]));
-      setCurrentUserId(decoded._id);
-    } catch (err) {
-      setError("Failed to decode token");
       setLoadingRide(false);
       return;
     }
@@ -88,10 +82,10 @@ const RideConfirmation = () => {
       }
     };
 
-    if (rideId && currentUserId) {
+    if (rideId) {
       loadRideDetails();
       setActiveRideId(rideId);
-    } else if (!rideId) {
+    } else {
       setErrorRide('No ride ID provided.');
       setLoadingRide(false);
     }
@@ -116,7 +110,7 @@ const RideConfirmation = () => {
   // Fetch the average rating for the owner and every joined user
   useEffect(() => {
     if (!rideDetails) return;
-    const token = localStorage.getItem("token");
+    const token = getToken();
     if (!token) return;
 
     const ids = new Set();
@@ -231,7 +225,7 @@ const RideConfirmation = () => {
   };
 
   const handleAction = async (userId, status) => {
-    const token = localStorage.getItem("token");
+    const token = getToken();
     if (!token) return;
 
     try {
@@ -271,6 +265,10 @@ const RideConfirmation = () => {
 
   const isChatAllowed = currentUserRideStatus === 'owner' || currentUserRideStatus === 'confirmed';
 
+  // A deleted account leaves its entry behind with a null user, so skip those
+  // instead of rendering (and crashing on) a participant who no longer exists.
+  const activeJoinedUsers = joinedUsers.filter((item) => item && item.user);
+
   return (
     <div className="user-profile">
       <h2>Ride Confirmation</h2>
@@ -278,13 +276,15 @@ const RideConfirmation = () => {
 
       <h3>Posted By</h3>
       <div className="user-list">
-        {rideDetails.user_id && renderUserCard(rideDetails.user_id, { ownerTag: true })}
+        {rideDetails.user_id
+          ? renderUserCard(rideDetails.user_id, { ownerTag: true })
+          : <p className="rc-rating-meta">This account is no longer available.</p>}
       </div>
 
       <h3>Joined Users</h3>
-      {joinedUsers.length > 0 ? (
+      {activeJoinedUsers.length > 0 ? (
         <div className="user-list">
-          {joinedUsers.map((item) => {
+          {activeJoinedUsers.map((item) => {
             const user = item.user;
             const isItemOwner = String(user._id) === String(ridePostedBy);
             const actions = (isOwner && !isItemOwner) ? (

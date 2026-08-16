@@ -57,12 +57,20 @@ const exportCSV = (filename, rows) => {
     headers.join(','),
     ...rows.map((r) => headers.map((h) => escape(r[h])).join(',')),
   ].join('\n');
-  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  // "﻿" keeps Excel from mangling non-ASCII text in the export.
+  const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
-  link.href = URL.createObjectURL(blob);
+  link.href = url;
   link.download = filename;
+  link.rel = 'noopener';
+  // Firefox only honours a programmatic click on a link that is in the
+  // document, and it needs the object URL to outlive the click, so the
+  // revoke is deferred instead of running straight away.
+  document.body.appendChild(link);
   link.click();
-  URL.revokeObjectURL(link.href);
+  document.body.removeChild(link);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
 };
 
 // ---- small presentational components ------------------------------------

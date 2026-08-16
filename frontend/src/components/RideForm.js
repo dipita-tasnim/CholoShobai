@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { API_BASE } from "../config";
+import LocationSelect from "./LocationSelect";
 
 
 
@@ -75,19 +76,26 @@ const RideForm = () => {
 
             {error && <div className="error">{error}</div>}
 
-            <label>Starting Point:</label>
-            <input
-                type="text"
-                onChange={(e) => setStartingPoint(e.target.value)}
-                value={startingPoint}  
-            />    
+            <label htmlFor="starting-point">Starting Point:</label>
+            <LocationSelect
+                id="starting-point"
+                value={startingPoint}
+                onChange={setStartingPoint}
+                placeholder="Type or pick a starting point"
+                exclude={destination}
+                required
+            />
 
-            <label>Destination:</label>
-            <input
-                type="text"
-                onChange={(e) => setDestination(e.target.value)}
-                value={destination}  
-            />    
+            <label htmlFor="destination">Destination:</label>
+            <LocationSelect
+                id="destination"
+                value={destination}
+                onChange={setDestination}
+                placeholder="Type or pick a destination"
+                exclude={startingPoint}
+                required
+            />
+
             <label>Date:</label>
             <input
                 type="date"

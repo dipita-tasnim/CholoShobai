@@ -43,7 +43,7 @@ const ChatList = () => {
     return (
         <div className="chat-list">
             {messages.length === 0 && (
-                <div className="chat-empty">No messages yet — say hello! 👋</div>
+                <div className="chat-empty">No messages yet</div>
             )}
             {messages.map((message) => {
                 const isOwnMessage = message.sender._id === user._id;

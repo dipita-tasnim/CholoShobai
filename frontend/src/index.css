@@ -475,6 +475,46 @@ body {
   margin-top: 1.5rem;
 }
 
+/* Small "posted by" line at the top of a ride card */
+.ride-poster {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 1rem;
+}
+
+.ride-poster-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background-color: #0F172A;
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.ride-poster-name {
+  color: #475569;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.ride-poster-you {
+  padding: 1px 7px;
+  border-radius: 999px;
+  background-color: #F1F5F9;
+  color: #64748B;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
 .ride-from-to-wrapper {
   display: flex;
   align-items: center;
@@ -741,6 +781,86 @@ input {
 .create select option:disabled {
   color: #9ca3af;
   font-size: 0.9rem;
+}
+
+/* Location field with suggestions (starting point / destination) */
+.location-select {
+  position: relative;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.location-select-input {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+  background-color: #fff;
+  font-size: 1rem;
+  font-family: inherit;
+  color: #1f2937;
+}
+
+.location-select-input::placeholder {
+  color: #9ca3af;
+  font-size: 0.9rem;
+}
+
+.location-select-input:focus {
+  outline: none;
+  border-color: #0F172A;
+}
+
+.location-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  z-index: 30;
+  max-height: 260px;
+  overflow-y: auto;
+  padding: 4px 0;
+  background-color: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.12);
+}
+
+.location-group-title {
+  position: sticky;
+  top: 0;
+  padding: 8px 12px 4px;
+  background-color: #fff;
+  color: #6B7280;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.location-option {
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  border: none;
+  background: none;
+  font-size: 0.95rem;
+  font-family: inherit;
+  color: #1f2937;
+  text-align: left;
+  cursor: pointer;
+}
+
+.location-option.is-active {
+  background-color: #F1F5F9;
+}
+
+.location-option.is-selected {
+  color: #0F172A;
+  font-weight: 600;
 }
 
 .post-button {
@@ -2424,6 +2544,21 @@ body, html, #root {
   max-width: 720px;
 }
 
+.notif-page-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.notif-page-head h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+}
+
 .notif-empty {
   color: #6B7280;
 }
@@ -2442,6 +2577,12 @@ body, html, #root {
   border-radius: 10px;
   padding: 16px 18px;
   box-shadow: 0 1px 4px rgba(15, 23, 42, 0.05);
+}
+
+/* Unread cards get the red edge that matches the bell badge */
+.notif-card.is-unread {
+  border-left-color: #EF4444;
+  background: #FEF2F2;
 }
 
 .notif-title {
@@ -2522,10 +2663,58 @@ body, html, #root {
 }
 
 .notif-dropdown-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
   padding: 12px 16px;
   font-weight: 700;
   color: #0F172A;
   border-bottom: 1px solid #F1F5F9;
+}
+
+.notif-dropdown-heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* "3 new" counter next to the heading */
+.notif-unread-count {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #FEE2E2;
+  color: #B91C1C;
+  font-size: 0.7rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.notif-mark-read {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border: 1px solid #E2E8F0;
+  border-radius: 999px;
+  background: #fff;
+  color: #0F172A;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.notif-mark-read:hover:not(:disabled) {
+  background: #F1F5F9;
+}
+
+.notif-mark-read:disabled {
+  color: #9CA3AF;
+  border-color: #F1F5F9;
+  cursor: default;
 }
 
 .notif-dropdown-list {
@@ -2547,6 +2736,37 @@ body, html, #root {
 
 .notif-dropdown-item:last-child {
   border-bottom: none;
+}
+
+/* Unread rows keep a tinted background and a red marker */
+.notif-dropdown-item.is-unread {
+  position: relative;
+  background: #F8FAFC;
+}
+
+.notif-dropdown-item.is-unread::before {
+  content: "";
+  position: absolute;
+  top: 17px;
+  left: 6px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #EF4444;
+}
+
+/* Chip marking a notification only admins can see */
+.notif-tag {
+  display: inline-block;
+  margin-bottom: 6px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background-color: #E0E7FF;
+  color: #3730A3;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .notif-dropdown-title {
