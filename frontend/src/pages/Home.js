@@ -12,9 +12,23 @@ import {
   toRideTime,
 } from "../utils/datetime";
 
+const EMPTY_SEARCH = { from: '', to: '', date: '', time: '', preference: '' };
+
+// Human readable summary of the filters a search actually used.
+const describeFilters = (params) => {
+  const parts = [];
+  if (params.from) parts.push(`from ${params.from}`);
+  if (params.to) parts.push(`to ${params.to}`);
+  if (params.date) parts.push(`on ${formatDateDisplay(params.date)}`);
+  if (params.time) parts.push(`at ${formatTimeDisplay(params.time)}`);
+  if (params.preference) parts.push(`for ${params.preference}`);
+  return parts.join(', ');
+};
+
 export default function Home() {
   const [rides, setRides] = useState(null);
   const [loadError, setLoadError] = useState(null);
+  const [appliedFilters, setAppliedFilters] = useState('');
   const [searchParams, setSearchParams] = useState({
     from: '',
     to: '',
@@ -52,6 +66,7 @@ export default function Home() {
       if (response.ok) {
         setRides(json);
         setLoadError(null);
+        setAppliedFilters(describeFilters(params));
         return;
       }
 
@@ -77,6 +92,11 @@ export default function Home() {
   const handleSearch = (e) => {
     e.preventDefault();
     fetchRides(searchParams);
+  };
+
+  const handleClearSearch = () => {
+    setSearchParams(EMPTY_SEARCH);
+    fetchRides();
   };
 
   const handleInputChange = (e) => {
@@ -167,6 +187,9 @@ export default function Home() {
           </select>
         </div>
         <button type="submit" className="search-btn">Search</button>
+        <button type="button" className="search-reset-btn" onClick={handleClearSearch}>
+          Reset
+        </button>
       </form>
 
       {/* Ride listing */}
@@ -180,7 +203,16 @@ export default function Home() {
       )}
 
       {!loadError && rides && rides.length === 0 && (
-        <div className="feed-message">No rides match your search yet.</div>
+        <div className="feed-message">
+          {appliedFilters
+            ? `No rides found ${appliedFilters}.`
+            : "No rides have been posted yet."}
+          {appliedFilters && (
+            <button type="button" className="feed-message-action" onClick={handleClearSearch}>
+              Show all rides
+            </button>
+          )}
+        </div>
       )}
 
       <div className="ride-list">

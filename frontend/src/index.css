@@ -443,6 +443,23 @@ body {
   color: #9CA3AF;
 }
 
+.search-reset-btn {
+  background-color: #fff;
+  color: #475569;
+  border: 1px solid #E2E8F0;
+  padding: 0.6rem 1.1rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.search-reset-btn:hover {
+  background-color: #F1F5F9;
+}
+
 .search-btn {
   background-color: #0F172A;
   color: white;
@@ -484,9 +501,19 @@ body {
 }
 
 .feed-message-action {
+  padding: 0;
+  border: none;
+  background: none;
   color: #B91C1C;
+  font-family: inherit;
+  font-size: inherit;
   font-weight: 600;
   text-decoration: underline;
+  cursor: pointer;
+}
+
+.feed-message:not(.is-error) .feed-message-action {
+  color: #0F172A;
 }
 
 .ride-list {
