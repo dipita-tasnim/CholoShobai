@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 
 // A native date/time input with our own text on top of it.
 //
@@ -7,24 +7,70 @@ import { useRef } from "react";
 // shows "04:30 PM". That text cannot be styled, so the real input is laid
 // over the field at zero opacity: taps and clicks still reach it and open
 // the usual picker, while the label below is text we control.
-const DateTimeField = ({ type, value, onChange, display, placeholder, required, id }) => {
+const DateTimeField = ({
+    type,
+    value,
+    onChange,
+    display,
+    placeholder,
+    required,
+    id,
+    className = "",
+}) => {
+    const wrapperRef = useRef(null);
     const inputRef = useRef(null);
+    const pickerOpenRef = useRef(false);
+
+    const closePicker = () => {
+        pickerOpenRef.current = false;
+        inputRef.current?.blur();
+    };
+
+    // The browser's calendar/clock panel lives outside the page, so a click
+    // that reaches the document means the user clicked away from it. Blur to
+    // dismiss the panel, otherwise it can sit there after a value is picked.
+    useEffect(() => {
+        const handlePointerDown = (e) => {
+            if (!wrapperRef.current || wrapperRef.current.contains(e.target)) return;
+            if (document.activeElement === inputRef.current) closePicker();
+        };
+        const handleKeyDown = (e) => {
+            if (e.key === "Escape" && document.activeElement === inputRef.current) {
+                closePicker();
+            }
+        };
+        document.addEventListener("pointerdown", handlePointerDown, true);
+        document.addEventListener("keydown", handleKeyDown);
+        return () => {
+            document.removeEventListener("pointerdown", handlePointerDown, true);
+            document.removeEventListener("keydown", handleKeyDown);
+        };
+    }, []);
 
     // Desktop browsers only open the picker from the small calendar/clock
-    // icon, so ask for it explicitly. Not supported everywhere, and it
-    // throws if the input is not user-activated, hence the guard.
-    const openPicker = () => {
+    // icon, so ask for it explicitly. Clicking the field again closes it
+    // instead of re-opening the same panel.
+    const handleClick = () => {
         const input = inputRef.current;
         if (!input) return;
+
+        if (pickerOpenRef.current) {
+            closePicker();
+            return;
+        }
+
         try {
-            if (typeof input.showPicker === "function") input.showPicker();
+            if (typeof input.showPicker === "function") {
+                input.showPicker();
+                pickerOpenRef.current = true;
+            }
         } catch (err) {
             /* the browser will still open its own picker on focus */
         }
     };
 
     return (
-        <div className="datetime-field">
+        <div className={`datetime-field ${className}`.trim()} ref={wrapperRef}>
             <span className={`datetime-display ${value ? "" : "is-placeholder"}`}>
                 {value ? display : placeholder}
             </span>
@@ -49,7 +95,8 @@ const DateTimeField = ({ type, value, onChange, display, placeholder, required, 
                 value={value}
                 required={required}
                 onChange={(e) => onChange(e.target.value)}
-                onClick={openPicker}
+                onClick={handleClick}
+                onBlur={() => { pickerOpenRef.current = false; }}
             />
         </div>
     );

@@ -13,13 +13,18 @@ const LocationSelect = ({
 }) => {
     const [open, setOpen] = useState(false);
     const [activeIndex, setActiveIndex] = useState(-1);
+    // Filtering only applies while the user is typing. After a place is
+    // picked, the field holds a complete name, so filtering by it would
+    // leave a list of exactly one entry.
+    const [filtering, setFiltering] = useState(false);
 
     const wrapperRef = useRef(null);
     const inputRef = useRef(null);
     const listRef = useRef(null);
+    const skipNextFocusRef = useRef(false);
 
     const groups = useMemo(() => {
-        const search = value.trim().toLowerCase();
+        const search = filtering ? value.trim().toLowerCase() : "";
         return DHAKA_LOCATIONS
             .map((group) => ({
                 district: group.district,
@@ -32,7 +37,7 @@ const LocationSelect = ({
                 )
             }))
             .filter((group) => group.places.length > 0);
-    }, [value, exclude]);
+    }, [value, exclude, filtering]);
 
     // Flat list of the visible places so arrow keys can walk across groups.
     const suggestions = useMemo(
@@ -62,15 +67,27 @@ const LocationSelect = ({
     const handleChange = (e) => {
         onChange(e.target.value);
         setActiveIndex(-1);
+        setFiltering(true);
         setOpen(true);
     };
 
     const select = (place) => {
         onChange(place);
         setActiveIndex(-1);
+        setFiltering(false);
         setOpen(false);
-        // Leave the cursor in the field so extra detail can be typed right away.
+        // Leave the cursor in the field so extra detail can be typed right
+        // away, without the focus re-opening the list we just closed.
+        skipNextFocusRef.current = true;
         inputRef.current?.focus();
+    };
+
+    const handleFocus = () => {
+        if (skipNextFocusRef.current) {
+            skipNextFocusRef.current = false;
+            return;
+        }
+        setOpen(true);
     };
 
     const handleKeyDown = (e) => {
@@ -118,7 +135,7 @@ const LocationSelect = ({
                 required={required}
                 autoComplete="off"
                 onChange={handleChange}
-                onFocus={() => setOpen(true)}
+                onFocus={handleFocus}
                 onKeyDown={handleKeyDown}
             />
 

@@ -32,12 +32,15 @@ const getRides = async (req, res) => {
     // Handle date format variations
     if (date) {
       const dateObj = new Date(date);
-      const day = String(dateObj.getDate()).padStart(2, '0');
-      const month = dateObj.toLocaleString('en-US', { month: 'long' });
-      
-      // Create a regex pattern that matches the day and month but is flexible with the year
-      const datePattern = new RegExp(`^${day} ${month}, \\d{4}$`, 'i');
-      query.date = datePattern;
+      if (!isNaN(dateObj.getTime())) {
+        const day = dateObj.getDate();
+        const month = dateObj.toLocaleString('en-US', { month: 'long' });
+
+        // Rides store the day without a leading zero ("7 August, 2026"), so
+        // the zero is optional here; the year stays flexible.
+        const datePattern = new RegExp(`^0?${day} ${month}, \\d{4}$`, 'i');
+        query.date = datePattern;
+      }
     }
 
     // Handle time format variations

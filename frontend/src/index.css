@@ -805,6 +805,19 @@ input {
   border-color: #0F172A;
 }
 
+/* Slimmer variant used inside the search bar */
+.datetime-field.is-compact {
+  margin: 0;
+  padding: 0.55rem 0.75rem;
+  border-color: #ccc;
+  border-radius: 8px;
+}
+
+.datetime-field.is-compact .datetime-display,
+.datetime-field.is-compact .datetime-display.is-placeholder {
+  font-size: 0.9rem;
+}
+
 .datetime-display {
   font-size: 1rem;
   color: #1f2937;

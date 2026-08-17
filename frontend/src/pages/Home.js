@@ -3,7 +3,14 @@ import { Link } from 'react-router-dom';
 
 // components
 import RideDetails from "../components/RideDetails";
+import DateTimeField from "../components/DateTimeField";
 import { API_BASE } from "../config";
+import {
+  formatDateDisplay,
+  formatTimeDisplay,
+  toRideDate,
+  toRideTime,
+} from "../utils/datetime";
 
 export default function Home() {
   const [rides, setRides] = useState(null);
@@ -21,23 +28,11 @@ export default function Home() {
 
     // Handling search
     try {
+      // Same helpers the post form uses, so a search matches what was saved.
       const formattedParams = {
         ...params,
-        date: params.date ? (() => {
-          const date = new Date(params.date);
-          const day = String(date.getDate()).padStart(2, '0');
-          const month = date.toLocaleString('en-US', { month: 'long' });
-          const year = date.getFullYear();
-          return `${day} ${month}, ${year}`;
-        })() : '',
-        time: params.time ? (() => {
-          const time = new Date(`1970-01-01T${params.time}`);
-          const hour = time.getHours();
-          const minute = String(time.getMinutes()).padStart(2, '0');
-          const ampm = hour >= 12 ? 'pm' : 'am';
-          const hour12 = hour % 12 || 12;
-          return `${hour12}.${minute} ${ampm}`;
-        })() : ''
+        date: toRideDate(params.date),
+        time: toRideTime(params.time)
       };
 
       const queryString = new URLSearchParams(formattedParams).toString();
@@ -116,23 +111,27 @@ export default function Home() {
           />
         </div>
         <div className="search-field-group">
-          <label className="search-label">Date</label>
-          <input
+          <label className="search-label" htmlFor="search-date">Date</label>
+          <DateTimeField
+            id="search-date"
             type="date"
-            name="date"
-            className="search-field"
+            className="is-compact"
             value={searchParams.date}
-            onChange={handleInputChange}
+            onChange={(v) => setSearchParams((prev) => ({ ...prev, date: v }))}
+            display={formatDateDisplay(searchParams.date)}
+            placeholder="Any date"
           />
         </div>
         <div className="search-field-group">
-          <label className="search-label">Time</label>
-          <input
+          <label className="search-label" htmlFor="search-time">Time</label>
+          <DateTimeField
+            id="search-time"
             type="time"
-            name="time"
-            className="search-field"
+            className="is-compact"
             value={searchParams.time}
-            onChange={handleInputChange}
+            onChange={(v) => setSearchParams((prev) => ({ ...prev, time: v }))}
+            display={formatTimeDisplay(searchParams.time)}
+            placeholder="Any time"
           />
         </div>
         <div className="search-field-group">
