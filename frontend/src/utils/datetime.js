@@ -9,16 +9,23 @@ const MONTHS = [
 ];
 
 // "2026-08-17" (the value of an <input type="date">) -> [2026, 8, 17]
+// Anything else, including an empty field, gives null. The shape is checked
+// with a pattern because Number("") is 0 rather than NaN, so arithmetic
+// guards alone would let an empty value through.
 const splitDate = (value) => {
-    const [year, month, day] = String(value || "").split("-").map(Number);
-    if (!year || !month || !day || month < 1 || month > 12) return null;
+    const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(value || "").trim());
+    if (!match) return null;
+    const [year, month, day] = match.slice(1).map(Number);
+    if (month < 1 || month > 12 || day < 1 || day > 31) return null;
     return [year, month, day];
 };
 
 // "16:30" (the value of an <input type="time">) -> [16, 30]
 const splitTime = (value) => {
-    const [hour, minute] = String(value || "").split(":").map(Number);
-    if (Number.isNaN(hour) || Number.isNaN(minute)) return null;
+    const match = /^(\d{1,2}):(\d{2})/.exec(String(value || "").trim());
+    if (!match) return null;
+    const [hour, minute] = match.slice(1).map(Number);
+    if (hour > 23 || minute > 59) return null;
     return [hour, minute];
 };
 
