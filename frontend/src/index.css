@@ -460,6 +460,35 @@ body {
   background-color: #334155;
 }
 
+/* Message shown in place of the feed when it is empty or failed to load */
+.feed-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 1.5rem;
+  padding: 1rem 1.25rem;
+  border-radius: 10px;
+  background-color: #fff;
+  border: 1px solid #E5E7EB;
+  color: #6B7280;
+  font-size: 0.92rem;
+  text-align: center;
+}
+
+.feed-message.is-error {
+  border-color: #FECACA;
+  background-color: #FEF2F2;
+  color: #B91C1C;
+}
+
+.feed-message-action {
+  color: #B91C1C;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
 .ride-list {
   margin-top: 2rem;
   display: flex;

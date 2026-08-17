@@ -14,6 +14,7 @@ import {
 
 export default function Home() {
   const [rides, setRides] = useState(null);
+  const [loadError, setLoadError] = useState(null);
   const [searchParams, setSearchParams] = useState({
     from: '',
     to: '',
@@ -24,7 +25,11 @@ export default function Home() {
 
   const fetchRides = async (params = {}) => {
     const token = localStorage.getItem("token");
-    if (!token) return;
+    if (!token) {
+      setRides([]);
+      setLoadError("You are signed out. Please log in again to see rides.");
+      return;
+    }
 
     // Handling search
     try {
@@ -46,9 +51,22 @@ export default function Home() {
       const json = await response.json();
       if (response.ok) {
         setRides(json);
+        setLoadError(null);
+        return;
       }
+
+      // Do not leave an empty feed with no explanation: a session that has
+      // expired looks exactly like "there are no rides" otherwise.
+      setRides([]);
+      setLoadError(
+        response.status === 401
+          ? "Your session has expired. Please log in again to see rides."
+          : json?.message || "Could not load rides. Please try again."
+      );
     } catch (err) {
       console.error("Error fetching rides:", err);
+      setRides([]);
+      setLoadError("Could not reach the server. Please check your connection and try again.");
     }
   };
 
@@ -152,6 +170,19 @@ export default function Home() {
       </form>
 
       {/* Ride listing */}
+      {loadError && (
+        <div className="feed-message is-error">
+          {loadError}
+          {loadError.includes("log in") && (
+            <Link to="/login" className="feed-message-action">Go to login</Link>
+          )}
+        </div>
+      )}
+
+      {!loadError && rides && rides.length === 0 && (
+        <div className="feed-message">No rides match your search yet.</div>
+      )}
+
       <div className="ride-list">
         {rides && rides.map((ride) => (
           <RideDetails key={ride._id} ride={ride} />
