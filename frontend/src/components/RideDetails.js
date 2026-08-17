@@ -111,10 +111,12 @@ const RideDetails = ({ ride }) => {
           See Who's Going
         </button>
 
+        {/* A closed ride reads as "Closed", so it must not also carry the
+            green connected styling. */}
         {!isOwner && (
           <button
             type="button"
-            className={`btn-connect ${isJoined ? "connected" : ""}`}
+            className={`btn-connect ${isJoined && isOpen ? "connected" : ""}`}
             disabled={!isOpen}
             onClick={toggleJoin}
           >

@@ -708,8 +708,10 @@ body {
   transition: background-color 0.2s ease;
 }
 
-.btn-view-riders:hover {
-  background-color: #334155;
+@media (hover: hover) {
+  .btn-view-riders:hover {
+    background-color: #334155;
+  }
 }
 
 .btn-connect {
@@ -724,22 +726,38 @@ body {
   transition: background-color 0.2s ease;
 }
 
-.btn-connect:hover {
-  background-color: #334155;
-}
-
 .btn-connect.connected {
   background-color: #16A34A;
 }
 
-.btn-connect.connected:hover {
-  background-color: #15803D;
+/* Hover only where there is a real pointer. On a touch screen the hover
+   state sticks after a tap, which made buttons change colour and stay
+   that way, so phones and laptops looked different. */
+@media (hover: hover) {
+  .btn-connect:hover:not(:disabled) {
+    background-color: #334155;
+  }
+
+  .btn-connect.connected:hover:not(:disabled) {
+    background-color: #15803D;
+  }
 }
 
-.btn-connect:disabled {
+/* A closed ride never reacts: not to hover, tap, focus or click. The
+   :disabled variants are listed with the same weight as the states above
+   so nothing can override them. */
+.btn-connect:disabled,
+.btn-connect:disabled:hover,
+.btn-connect:disabled:active,
+.btn-connect:disabled:focus,
+.btn-connect.connected:disabled,
+.btn-connect.connected:disabled:hover,
+.btn-connect.connected:disabled:active,
+.btn-connect.connected:disabled:focus {
   background-color: #CBD5E1;
   color: #64748B;
   cursor: not-allowed;
+  box-shadow: none;
 }
 
 .status-buttons {
