@@ -2,6 +2,13 @@ import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { API_BASE } from "../config";
 import LocationSelect from "./LocationSelect";
+import DateTimeField from "./DateTimeField";
+import {
+    formatDateDisplay,
+    formatTimeDisplay,
+    toRideDate,
+    toRideTime,
+} from "../utils/datetime";
 
 
 
@@ -21,19 +28,8 @@ const RideForm = () => {
         e.preventDefault()
 
         // Format date and time to match the format in the database
-        const formattedDate = date ? (() => {
-            const dateObj = new Date(date);
-            const day = dateObj.getDate();
-            const month = dateObj.toLocaleString('en-US', { month: 'long' });
-            const year = dateObj.getFullYear();
-            return `${day} ${month}, ${year}`;
-        })() : '';
-        
-        const formattedTime = time ? new Date(`1970-01-01T${time}`).toLocaleTimeString('en-US', {
-            hour: 'numeric',
-            minute: '2-digit',
-            hour12: true
-        }).toLowerCase().replace(':', '.') : '';
+        const formattedDate = toRideDate(date);
+        const formattedTime = toRideTime(time);
 
         const ride = {
             startingPoint,
@@ -96,17 +92,26 @@ const RideForm = () => {
                 required
             />
 
-            <label>Date:</label>
-            <input
+            <label htmlFor="ride-date">Date:</label>
+            <DateTimeField
+                id="ride-date"
                 type="date"
-                onChange={(e) => setDate(e.target.value)}
                 value={date}
+                onChange={setDate}
+                display={formatDateDisplay(date)}
+                placeholder="Select a date"
+                required
             />
-            <label>Time:</label>
-            <input
+
+            <label htmlFor="ride-time">Time:</label>
+            <DateTimeField
+                id="ride-time"
                 type="time"
-                onChange={(e) => setTime(e.target.value)}
                 value={time}
+                onChange={setTime}
+                display={formatTimeDisplay(time)}
+                placeholder="Select a time"
+                required
             />
             <label>Available Slots:</label>
             <select

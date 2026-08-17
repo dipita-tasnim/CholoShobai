@@ -27,6 +27,7 @@ export const DHAKA_LOCATIONS = [
             "Bashundhara R/A",
             "Bijoy Sarani",
             "Bijoynagar",
+            "BRAC University",
             "Cantonment",
             "Chawkbazar",
             "Dhanmondi",

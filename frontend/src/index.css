@@ -783,6 +783,66 @@ input {
   font-size: 0.9rem;
 }
 
+/* Date and time fields: our own text over the native picker, so the
+   format reads the same on a phone as on a laptop */
+.datetime-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  margin: 10px 0 20px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+.datetime-field:focus-within {
+  border-color: #0F172A;
+}
+
+.datetime-display {
+  font-size: 1rem;
+  color: #1f2937;
+}
+
+.datetime-display.is-placeholder {
+  color: #9ca3af;
+  font-size: 0.9rem;
+}
+
+.datetime-icon {
+  display: flex;
+  flex-shrink: 0;
+  color: #6B7280;
+}
+
+/* The real input sits on top, invisible but fully clickable */
+.datetime-native {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: none;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.datetime-native::-webkit-calendar-picker-indicator {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
 /* Location field with suggestions (starting point / destination) */
 .location-select {
   position: relative;
