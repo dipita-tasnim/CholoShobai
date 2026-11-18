@@ -1,6 +1,32 @@
 const Ride = require('../models/rideModel');
 const User = require('../models/user.model');
 const mongoose = require('mongoose');
+const { sendNewRideAdminEmail } = require('../services/mail.service');
+
+// Emails every admin account about a newly posted ride. Recipients come only
+// from users whose role is 'admin'; the poster is never emailed unless they
+// are themselves an admin. Runs in the background and never throws, so a mail
+// problem cannot fail the ride creation.
+const notifyAdminsOfNewRide = async (ride, posterId) => {
+  try {
+    const [admins, poster] = await Promise.all([
+      User.find({ role: 'admin' }).select('email').lean(),
+      User.findById(posterId).select('fullname email').lean()
+    ]);
+    const adminEmails = [...new Set(admins.map((a) => a.email).filter(Boolean))];
+    if (adminEmails.length === 0) return;
+
+    const name = poster && poster.fullname
+      ? `${poster.fullname.firstname || ''} ${poster.fullname.lastname || ''}`.trim()
+      : 'Unknown user';
+    await sendNewRideAdminEmail(adminEmails, ride, {
+      name,
+      email: (poster && poster.email) || 'unknown'
+    });
+  } catch (err) {
+    console.error('Failed to notify admins of new ride:', err.message);
+  }
+};
 
 // Get all rides
 //Serach ride
@@ -140,6 +166,9 @@ const createRide = async (req, res) => {
     });
 
     res.status(201).json(ride);
+
+    // Fire and forget: the user does not wait for the admin email.
+    notifyAdminsOfNewRide(ride, req.user._id);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }

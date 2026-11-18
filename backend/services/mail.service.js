@@ -112,4 +112,62 @@ const sendBroadcastEmail = async (recipients, title, message) => {
     return { total: recipients.length, delivered };
 };
 
-module.exports = { sendOtpEmail, sendBroadcastEmail, hasSmtp, hasBrevo, hasMailProvider };
+// Ride fields are typed by users, so escape them before putting them in HTML.
+const escapeHtml = (value) =>
+    String(value == null ? '' : value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+
+const newRideRows = (ride, poster) => [
+    ['Posted by', poster.name],
+    ['Poster email', poster.email],
+    ['From', ride.startingPoint],
+    ['To', ride.destination],
+    ['Date', ride.date],
+    ['Time', ride.time],
+    ['Available slots', ride.availableSlots],
+    ['Preference', ride.preference],
+    ['Ride ID', String(ride._id)]
+];
+
+const newRideHtml = (rows) => `
+    <div style="font-family: Arial, sans-serif; max-width: 520px; margin: auto;">
+        <h2 style="color: #0f172a;">CholoShobai</h2>
+        <h3 style="color: #1f2937; margin-bottom: 8px;">A new ride was posted</h3>
+        <table style="border-collapse: collapse; width: 100%; color: #334155;">
+            ${rows.map(([label, value]) => `
+            <tr>
+                <td style="padding: 6px 12px 6px 0; color: #6b7280; white-space: nowrap; vertical-align: top;">${escapeHtml(label)}</td>
+                <td style="padding: 6px 0; font-weight: bold;">${escapeHtml(value)}</td>
+            </tr>`).join('')}
+        </table>
+        <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 20px 0;" />
+        <p style="color: #9ca3af; font-size: 12px;">You are receiving this because you are a CholoShobai admin.</p>
+    </div>
+`;
+
+// Tells admins that a ride was posted. Only the addresses passed in
+// adminEmails receive it; the caller is responsible for passing admin
+// addresses only. Each admin gets an individual email.
+const sendNewRideAdminEmail = async (adminEmails, ride, poster) => {
+    if (!adminEmails || adminEmails.length === 0) return { total: 0, delivered: 0 };
+    const rows = newRideRows(ride, poster);
+    const subject = `CholoShobai: new ride ${ride.startingPoint} to ${ride.destination}`;
+    const text = ['A new ride was posted on CholoShobai.', '']
+        .concat(rows.map(([label, value]) => `${label}: ${value}`))
+        .join('\n');
+    const html = newRideHtml(rows);
+    const results = await Promise.allSettled(
+        adminEmails.map((to) => sendOne(to, subject, text, html))
+    );
+    results
+        .filter((r) => r.status === 'rejected')
+        .forEach((r) => console.error('Admin ride email failed:', r.reason && r.reason.message));
+    const delivered = results.filter((r) => r.status === 'fulfilled' && r.value && r.value.delivered).length;
+    return { total: adminEmails.length, delivered };
+};
+
+module.exports = { sendOtpEmail, sendBroadcastEmail, sendNewRideAdminEmail, hasSmtp, hasBrevo, hasMailProvider };
