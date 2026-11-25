@@ -1,6 +1,6 @@
 #  CholoShobai
 
-> **CholoShobai** platform connects people with similar travel plans. They can share costs which saves their money with a safe travel. We don’t provide vehicles, we help people to find each other.
+> **CholoShobai** platform connects people with similar travel plans. They can share costs which saves their money with a safe travel. It doesn’t provide vehicles, it helps people to find each other. CholoShobai is now live and used by an early user base. Maintaining and improving it based on real usage.
 
 **[Live App](http://choloshobai.vercel.app)**
 
