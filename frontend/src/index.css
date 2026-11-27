@@ -2068,6 +2068,10 @@ body, html, #root {
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 1.5rem;
   margin-top: 1rem;
+  /* Each card keeps its own height. Without this the grid stretches every
+     card in a row to the tallest one, so opening one profile made the card
+     beside it grow too and look opened but empty. */
+  align-items: start;
 }
 
 .user-card2 {
