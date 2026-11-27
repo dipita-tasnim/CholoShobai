@@ -16,6 +16,7 @@ import Notifications from './pages/Notifications';
 import AdminDashboard from './pages/AdminDashboard';
 import Logout from './components/Logout';
 import RideConfirmation from './pages/RideConfirmation';
+import { TopLoadingBar } from './components/Loading';
 import './index.css';
 
 function AppLayout() {
@@ -27,6 +28,7 @@ function AppLayout() {
 
   return (
     <div className="main-container">
+      <TopLoadingBar />
       {!shouldHideSidebar && <Sidebar />}
       {!shouldHideSidebar && <NotificationBell />}
       <div className={`content-area ${!shouldHideSidebar ? 'with-sidebar' : ''}`}>

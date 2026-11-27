@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { API_BASE } from "../config";
 import LocationSelect from "./LocationSelect";
 import DateTimeField from "./DateTimeField";
+import { Spinner } from "./Loading";
 import {
     formatDateDisplay,
     formatTimeDisplay,
@@ -23,9 +24,11 @@ const RideForm = () => {
     const [availableSlots, setAvailableSlots] = useState("");
     const [preference, setPreference] = useState("");
     const [error, setError] = useState(null);
+    const [posting, setPosting] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault()
+        if (posting) return;
 
         // Format date and time to match the format in the database
         const formattedDate = toRideDate(date);
@@ -41,18 +44,28 @@ const RideForm = () => {
         };
 
         const token = localStorage.getItem("token");
-        const response = await fetch(`${API_BASE}/api/rides`, {
-            method: 'POST',
-            body: JSON.stringify(ride),
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            }
-        });
-        const json = await response.json()
+        setPosting(true);
+        let response;
+        let json = {};
+        try {
+            response = await fetch(`${API_BASE}/api/rides`, {
+                method: 'POST',
+                body: JSON.stringify(ride),
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            json = await response.json().catch(() => ({}));
+        } catch (err) {
+            setError("Could not reach the server. Please try again.");
+            return;
+        } finally {
+            setPosting(false);
+        }
 
         if (!response.ok) {
-            setError(json.error)
+            setError(json.error || "Could not post the ride. Please try again.")
         }
         if (response.ok){
             setStartingPoint('')
@@ -135,7 +148,9 @@ const RideForm = () => {
                 <option value="Female">Female</option>
                 <option value="Both">Male/Female</option>
             </select>
-            <button className="post-button">+ POST</button>
+            <button className="post-button" disabled={posting}>
+                {posting ? <><Spinner size="small" /> POSTING</> : "+ POST"}
+            </button>
         </form>
     )
 }

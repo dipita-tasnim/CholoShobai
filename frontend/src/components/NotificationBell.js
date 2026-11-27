@@ -32,6 +32,8 @@ const NotificationBell = () => {
     try {
       const res = await fetch(`${API_BASE}/api/notifications`, {
         headers: { Authorization: `Bearer ${token}` },
+        // Background polling, so it should not show the loading bar.
+        trackLoading: false,
       });
       if (!res.ok) return;
       setNotifications(await res.json());

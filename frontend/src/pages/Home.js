@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 // components
 import RideDetails from "../components/RideDetails";
 import DateTimeField from "../components/DateTimeField";
+import { RideListSkeleton, Spinner } from "../components/Loading";
 import { API_BASE } from "../config";
 import {
   formatDateDisplay,
@@ -28,6 +29,7 @@ const describeFilters = (params) => {
 export default function Home() {
   const [rides, setRides] = useState(null);
   const [loadError, setLoadError] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [appliedFilters, setAppliedFilters] = useState('');
   const [searchParams, setSearchParams] = useState({
     from: '',
@@ -42,10 +44,12 @@ export default function Home() {
     if (!token) {
       setRides([]);
       setLoadError("You are signed out. Please log in again to see rides.");
+      setLoading(false);
       return;
     }
 
     // Handling search
+    setLoading(true);
     try {
       // Same helpers the post form uses, so a search matches what was saved.
       const formattedParams = {
@@ -82,6 +86,8 @@ export default function Home() {
       console.error("Error fetching rides:", err);
       setRides([]);
       setLoadError("Could not reach the server. Please check your connection and try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -186,14 +192,22 @@ export default function Home() {
             <option value="Both">Male, Female</option>
           </select>
         </div>
-        <button type="submit" className="search-btn">Search</button>
-        <button type="button" className="search-reset-btn" onClick={handleClearSearch}>
+        <button type="submit" className="search-btn" disabled={loading}>
+          {loading ? <><Spinner size="small" /> Searching</> : "Search"}
+        </button>
+        <button type="button" className="search-reset-btn" onClick={handleClearSearch} disabled={loading}>
           Reset
         </button>
       </form>
 
       {/* Ride listing */}
-      {loadError && (
+      {loading && (
+        <div className="ride-list">
+          <RideListSkeleton count={3} />
+        </div>
+      )}
+
+      {!loading && loadError && (
         <div className="feed-message is-error">
           {loadError}
           {loadError.includes("log in") && (
@@ -202,7 +216,7 @@ export default function Home() {
         </div>
       )}
 
-      {!loadError && rides && rides.length === 0 && (
+      {!loading && !loadError && rides && rides.length === 0 && (
         <div className="feed-message">
           {appliedFilters
             ? `No rides found ${appliedFilters}.`
@@ -215,11 +229,13 @@ export default function Home() {
         </div>
       )}
 
-      <div className="ride-list">
-        {rides && rides.map((ride) => (
-          <RideDetails key={ride._id} ride={ride} />
-        ))}
-      </div>
+      {!loading && (
+        <div className="ride-list">
+          {rides && rides.map((ride) => (
+            <RideDetails key={ride._id} ride={ride} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

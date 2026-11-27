@@ -5,6 +5,7 @@ import ChatWindow from '../components/chat/ChatWindow';
 import '../components/chat/Chat.css';
 import { API_BASE } from "../config";
 import { getCurrentUserId, getToken } from "../utils/auth";
+import { PageLoader } from "../components/Loading";
 
 const RideConfirmation = () => {
   const location = useLocation();
@@ -252,7 +253,7 @@ const RideConfirmation = () => {
   const isOwner = String(currentUserId) === String(ridePostedBy);
 
   if (loadingRide) {
-    return <div>Loading ride details...</div>;
+    return <PageLoader message="Loading ride details…" />;
   }
 
   if (errorRide) {

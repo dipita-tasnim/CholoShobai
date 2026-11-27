@@ -2,11 +2,13 @@ import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { API_BASE } from "../config";
 import { getCurrentUserId, getToken } from "../utils/auth";
+import { Spinner } from "./Loading";
 
 const RideDetails = ({ ride }) => {
   const isOpen = ride.status === "open";
   const navigate = useNavigate();
   const [isJoined, setIsJoined] = useState(false);
+  const [joining, setJoining] = useState(false);
 
   const currentUserId = useMemo(() => getCurrentUserId(), []);
   const ownerId = ride.user_id?._id || ride.user_id;
@@ -32,8 +34,9 @@ const RideDetails = ({ ride }) => {
 
   const toggleJoin = async () => {
     const token = getToken();
-    if (!token) return;
-    
+    if (!token || joining) return;
+
+    setJoining(true);
     try {
       const response = await fetch(`${API_BASE}/api/rides/${ride._id}/join`, {
         method: 'PUT',
@@ -53,6 +56,8 @@ const RideDetails = ({ ride }) => {
     } catch (error) {
       console.error('Error joining/leaving ride:', error);
       alert(error.message);
+    } finally {
+      setJoining(false);
     }
   };
 
@@ -117,9 +122,13 @@ const RideDetails = ({ ride }) => {
           <button
             type="button"
             className={`btn-connect ${isJoined && isOpen ? "connected" : ""}`}
+            // Not disabled while busy: disabled is the grey "Closed" look.
+            // toggleJoin ignores clicks until the request finishes.
             disabled={!isOpen}
+            aria-busy={joining}
             onClick={toggleJoin}
           >
+            {joining && <Spinner size="small" />}
             {!isOpen ? "Closed" : isJoined ? "Connected" : "Connect"}
           </button>
         )}

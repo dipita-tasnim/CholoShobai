@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
 import { API_BASE } from "../config";
 import RatingForm from "../components/RatingForm";
+import { RideListSkeleton, Spinner } from "../components/Loading";
 
 const MyRides = () => {
   const [rides, setRides] = useState([]);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+  // "<rideId>:<status>" while a status change is being saved.
+  const [savingStatus, setSavingStatus] = useState(null);
   const [expandedRideIds, setExpandedRideIds] = useState([]);
   const [ratingOpenIds, setRatingOpenIds] = useState([]);
   const [ratedUsers, setRatedUsers] = useState({});
@@ -29,6 +33,8 @@ const MyRides = () => {
         }
       } catch (err) {
         setError("Failed to fetch rides");
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -36,6 +42,7 @@ const MyRides = () => {
   }, []);
 
   const updateStatus = async (rideId, newStatus) => {
+    setSavingStatus(`${rideId}:${newStatus}`);
     try {
       const token = localStorage.getItem("token");
 
@@ -59,6 +66,8 @@ const MyRides = () => {
       }
     } catch (err) {
       console.error("Error updating ride status", err);
+    } finally {
+      setSavingStatus(null);
     }
   };
 
@@ -98,8 +107,9 @@ const MyRides = () => {
   return (
     <div className="my-rides">
       <h2>My Rides</h2>
-      {error && <p className="error">{error}</p>}
-      {rides.length === 0 && <p>No rides posted yet.</p>}
+      {loading && <RideListSkeleton count={2} />}
+      {!loading && error && <p className="error">{error}</p>}
+      {!loading && !error && rides.length === 0 && <p>No rides posted yet.</p>}
 
       {rides.map((ride) => {
         const isExpanded = expandedRideIds.includes(ride._id);
@@ -139,14 +149,16 @@ const MyRides = () => {
                   <button
                     className={`status-button ${ride.status === "open" ? "active-open" : ""}`}
                     onClick={() => updateStatus(ride._id, "open")}
+                    disabled={!!savingStatus}
                   >
-                    Open
+                    {savingStatus === `${ride._id}:open` && <Spinner size="small" />} Open
                   </button>
                   <button
                     className={`status-button ${ride.status === "closed" ? "active-closed" : ""}`}
                     onClick={() => updateStatus(ride._id, "closed")}
+                    disabled={!!savingStatus}
                   >
-                    Close
+                    {savingStatus === `${ride._id}:closed` && <Spinner size="small" />} Close
                   </button>
                 </div>
 

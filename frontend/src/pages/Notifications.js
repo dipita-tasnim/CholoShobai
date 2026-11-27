@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { API_BASE } from "../config";
 import { getToken } from "../utils/auth";
+import { PageLoader } from "../components/Loading";
 import { READ_EVENT, isUnread, markAllRead, readSeenTime } from "../utils/notifications";
 
 const fmtDateTime = (x) => {
@@ -69,7 +70,7 @@ const Notifications = () => {
           Mark all as read
         </button>
       </div>
-      {loading && <p>Loading...</p>}
+      {loading && <PageLoader message="Loading notifications…" />}
       {error && <p className="error">{error}</p>}
       {!loading && !error && notifications.length === 0 && (
         <p className="notif-empty">No notifications yet.</p>

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { API_BASE } from "../config";
+import { PageLoader, Spinner } from "../components/Loading";
 
 const initialsOf = (first = "", last = "") =>
   ((first[0] || "") + (last[0] || "")).toUpperCase() || "?";
@@ -127,7 +128,7 @@ const MyProfile = () => {
     return (
       <div className="profile-page">
         <div className="profile-card">
-          <p>Loading profile...</p>
+          <PageLoader message="Loading your profile…" />
         </div>
       </div>
     );
@@ -225,7 +226,7 @@ const MyProfile = () => {
 
             <div className="profile-actions">
               <button type="submit" className="profile-save-btn" disabled={saving}>
-                {saving ? "Saving..." : "Save Changes"}
+                {saving ? <><Spinner size="small" /> Saving</> : "Save Changes"}
               </button>
               <button
                 type="button"
